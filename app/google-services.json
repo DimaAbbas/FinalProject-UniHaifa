@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "933433782478",
+    "firebase_url": "https://finalproject-unihaifa-default-rtdb.firebaseio.com",
+    "project_id": "finalproject-unihaifa",
+    "storage_bucket": "finalproject-unihaifa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933433782478:android:0f5c860a4f8e6c6eb5e09f",
+        "android_client_info": {
+          "package_name": "com.example.finalproject_unihaifa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933433782478-ropfc5q5npirmm74l2kfqc0l3lepn0ci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9bQP20Kh68tXThUCmGgCGtMLzfmtyvQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933433782478-ropfc5q5npirmm74l2kfqc0l3lepn0ci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
