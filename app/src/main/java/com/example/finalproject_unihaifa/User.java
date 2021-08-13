@@ -1,8 +1,11 @@
 package com.example.finalproject_unihaifa;
 
+import java.util.List;
+
 public class User {
     private String name, email, phone, password;
     private String type; // Customer or Business Owner
+    private List<Appointment> appointments; //The type can be change according to usage
 
     public User(){
 
@@ -46,5 +49,17 @@ public class User {
     public void setType(String type){
         this.type = type;
     }
+
+    public void addAppointment(Appointment app){
+        this.appointments.add(app);
+    }
+    public void deleteAppointment(Appointment app){
+        this.appointments.remove(app);
+    }
+
+    public List<Appointment> getAppointments() {
+        return this.appointments;
+    }
+
 }
 
