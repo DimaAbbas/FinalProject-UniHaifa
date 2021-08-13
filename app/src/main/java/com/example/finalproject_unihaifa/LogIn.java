@@ -27,7 +27,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     DatabaseReference myRef;
     TextView forget;
     EditText username, pass;
-    String Name, Pass;
+    String Name, Pass, userType;
     User user;
 
     @Override
@@ -81,13 +81,16 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     user = snapshot.getValue(User.class);
+                    userType = user.getType();
                     mAuth.signInWithEmailAndPassword(user.getEmail(), Pass).addOnCompleteListener(
                             new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(), "LogIn Successful", Toast.LENGTH_LONG).show();
-                                        //startActivity(new Intent(getApplicationContext(), .class));
+                                        if (userType.equals("Business Owner")) {
+                                            startActivity(new Intent(getApplicationContext(), BusinessHomePage.class));
+                                        }
                                     }
                                     else{
                                         Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();

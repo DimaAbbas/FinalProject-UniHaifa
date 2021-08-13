@@ -2,7 +2,7 @@ package com.example.finalproject_unihaifa;
 
 public class User {
     private String name, email, phone, password;
-    private String type; // customer or business owner
+    private String type; // Customer or Business Owner
 
     public User(){
 
