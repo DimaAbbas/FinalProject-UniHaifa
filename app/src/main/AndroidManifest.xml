@@ -22,6 +22,8 @@
         <activity android:name=".LogIn" />
         <activity android:name=".BusinessHomePage"/>
         <activity android:name=".AccountInfo"/>
+        <activity android:name=".AppointmentsSettings"/>
+        <activity android:name=".NewAppointmentType"/>
     </application>
 
 </manifest>

@@ -1,18 +1,55 @@
 package com.example.finalproject_unihaifa;
 
 public class AppointmentType {
-    private String Type, length_time; //Not sure about the type of length_time
+    private String name;
+    private int duration;
+    private boolean[] days = new boolean[7];
+    private int startTime;
+    private int endTime;
+    private int price;
 
     public AppointmentType(){
 
     }
 
-    public AppointmentType(String Type, String length){
-        this.Type = Type;
-        this.length_time = length;
+    public AppointmentType(String name, int duration, int startTime, int endTime, int price){
+        this.name = name;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
     }
 
-    public String getLength_time(){
-        return this.length_time;
+    public AppointmentType(String name, int duration, boolean[] days, int startTime, int endTime, int price){
+        this.name = name;
+        this.duration = duration;
+        this.days = days;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getDuration  (){
+        return this.duration;
+    }
+
+    public boolean[] getDays() {
+        return days;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public int getPrice() {
+        return price;
     }
 }

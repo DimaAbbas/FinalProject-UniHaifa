@@ -23,6 +23,11 @@ public class BusinessUser extends User {
         this.appointmentTypes = user.appointmentTypes;
     }
 
+    public void addAppointmentType(AppointmentType newAppointmentType) {
+        appointmentTypes.add(newAppointmentType);
+        appointmentsTypesCount += 1;
+    }
+
     public String getDescription() {return this.description;}
     public int getAppointmentsTypesCount() {return this.appointmentsTypesCount;}
     public List<AppointmentType> getAppointmentTypes() {return this.appointmentTypes;}
