@@ -24,10 +24,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener{
-    EditText editName, editEmail, editPhone, editPassword;
+    EditText editName, editEmail, editPhone, editPassword, editDescription;
     RadioGroup rg;
     RadioButton userType;
-    String Name, Email, Phone, Password, UserType;
+    String Name, Email, Phone, Password, UserType, description;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -43,10 +43,13 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         editEmail = (EditText) findViewById(R.id.editEmail);
         editPhone = (EditText) findViewById(R.id.editPhone);
         editPassword = (EditText) findViewById(R.id.editPassword);
+        editDescription = (EditText) findViewById(R.id.editDescription);
         rg = (RadioGroup) findViewById(R.id.radioGroup);
 
         findViewById(R.id.register).setOnClickListener(this);
         findViewById(R.id.backto).setOnClickListener(this);
+        findViewById(R.id.radioButton1).setOnClickListener(this);
+        findViewById(R.id.radioButton2).setOnClickListener(this);
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("User");
@@ -57,6 +60,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         Phone = editPhone.getText().toString().trim();
         Email = editEmail.getText().toString().trim();
         Password = editPassword.getText().toString().trim();
+        description = editDescription.getText().toString().trim();
 
         if(Name.isEmpty()){
             editName.setError("Name is required!!");
@@ -100,6 +104,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         else{
             userType = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
             UserType = userType.getText().toString().trim();
+
+            if(UserType.equals("Business Owner") && description.isEmpty()) {
+                editDescription.setError("Add business description");
+                editDescription.requestFocus();
+            }
         }
 
         Query checkUser = myRef.orderByChild("name").equalTo(Name);
@@ -113,7 +122,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(),"User Registered Successfully",Toast.LENGTH_LONG).show();
-                                        User user = new User(Name, Phone, Email, Password, UserType);
+                                        User user;
+                                        if (UserType.equals("Business Owner")){
+                                            user = new BusinessUser(Name, Phone, Email, Password, UserType, description);
+                                        } else {
+                                            user = new User(Name, Phone, Email, Password, UserType);
+                                        }
                                         myRef.child(Name).setValue(user);
                                         startActivity(new Intent(getApplicationContext(), LogIn.class));
                                     }
@@ -145,6 +159,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                 break;
             case R.id.backto:
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                break;
+            case R.id.radioButton1:
+                editDescription.setVisibility(editDescription.VISIBLE);
+                break;
+            case R.id.radioButton2:
+                editDescription.setVisibility(editDescription.INVISIBLE);
                 break;
         }
     }
