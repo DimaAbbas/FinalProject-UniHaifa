@@ -16,7 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/business_menu"
-        app:titleTextColor="#FFFFFF" />
+        app:titleTextColor="#FFFFFF" >
+
+        <TextView
+            android:id="@+id/BusinessUserNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="26dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <CalendarView
         android:id="@+id/calendarView"
