@@ -60,12 +60,12 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
                 switch (item.getItemId()) {
                     case R.id.B_account_info:
-                        Toast.makeText(getApplicationContext(), "Your account clicked", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Your account clicked", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), AccountInfo.class));
                         break;
                     case R.id.B_Appointments:
-                        Toast.makeText(getApplicationContext(), "appointments settings clicked", Toast.LENGTH_SHORT).show();
-
+                        //Toast.makeText(getApplicationContext(), "appointments settings clicked", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                         break;
                     case R.id.customers_list:
                         Toast.makeText(getApplicationContext(), "customer list clicked", Toast.LENGTH_SHORT).show();
