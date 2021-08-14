@@ -28,7 +28,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     TextView forget;
     EditText username, pass;
     String Name, Pass, userType;
-    User user;
+    static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
+                                        setUser(user);
                                         Toast.makeText(getApplicationContext(), "LogIn Successful", Toast.LENGTH_LONG).show();
                                         if (userType.equals("Business Owner")) {
                                             startActivity(new Intent(getApplicationContext(), BusinessHomePage.class));
@@ -110,6 +111,13 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
+    }
+
+    public static User getUser() {
+        return user;
+    }
+    public static void setUser(User u){
+        user=new User(u);
     }
 }
 

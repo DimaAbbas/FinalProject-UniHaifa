@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/B_account"
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:orderInCategory="2"
-        android:title="Profile"
+        android:title="Account"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/new_appointment"
+        android:id="@+id/B_new_appointment"
         android:icon="@drawable/ic_baseline_add_alarm_24"
         android:orderInCategory="1"
         android:title="New Appointment"

@@ -16,6 +16,14 @@ public class User {
         this.type = type;
     }
 
+    public User(User user) {
+        this.name = user.name;
+        this.phone = user.phone;
+        this.email = user.email;
+        this.password = user.password;
+        this.type = user.type;
+    }
+
     public String getName(){
         return this.name;
     }

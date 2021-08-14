@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/B_account_info"
+        android:title="Your Account" />
+    <item
+        android:id="@+id/B_Appointments"
+        android:title="Appointments Settings" />
+    <item
+        android:id="@+id/customers_list"
+        android:title="Customers List" />
+    <item
+        android:id="@+id/log_out"
+        android:title="Log out" />
+
+</menu>
