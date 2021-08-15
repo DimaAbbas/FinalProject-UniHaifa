@@ -1,7 +1,7 @@
 package com.example.finalproject_unihaifa;
 
 public class AppointmentType {
-    private String name;
+    private String TypeName;
     private int duration;
     private boolean[] days = new boolean[7];
     private int startTime;
@@ -13,7 +13,7 @@ public class AppointmentType {
     }
 
     public AppointmentType(String name, int duration, int startTime, int endTime, int price){
-        this.name = name;
+        this.TypeName = name;
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -21,7 +21,7 @@ public class AppointmentType {
     }
 
     public AppointmentType(String name, int duration, boolean[] days, int startTime, int endTime, int price){
-        this.name = name;
+        this.TypeName = name;
         this.duration = duration;
         this.days = days;
         this.startTime = startTime;
@@ -30,7 +30,7 @@ public class AppointmentType {
     }
 
     public String getName() {
-        return this.name;
+        return this.TypeName;
     }
 
     public int getDuration  (){

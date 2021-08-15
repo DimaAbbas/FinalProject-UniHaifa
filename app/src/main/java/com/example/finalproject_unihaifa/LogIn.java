@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,8 +27,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     FirebaseDatabase database;
     DatabaseReference myRef;
     TextView forget;
-    EditText username, pass;
-    String Name, Pass, userType;
+    EditText email, pass;
+    String Email, Pass, userType;
     static User user;
 
     @Override
@@ -39,7 +40,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("User");
 
-        username = (EditText) findViewById(R.id.username);
+        email = (EditText) findViewById(R.id.email);
         pass = (EditText) findViewById(R.id.userpass);
 
         findViewById(R.id.btn_login).setOnClickListener(this);
@@ -62,12 +63,12 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void LogIn() {
-        Name = username.getText().toString().trim();
+        Email = email.getText().toString().trim();
         Pass = pass.getText().toString().trim();
 
-        if(Name.isEmpty()){
-            username.setError("Username is required!!");
-            username.requestFocus();
+        if(Email.isEmpty()){
+            email.setError("Username is required!!");
+            email.requestFocus();
             return;
         }
         if(Pass.isEmpty()){
@@ -75,43 +76,40 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             pass.requestFocus();
             return;
         }
-        Query checkUser = myRef.child(Name);
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    user = snapshot.getValue(User.class);
-                    userType = user.getType();
-                    mAuth.signInWithEmailAndPassword(user.getEmail(), Pass).addOnCompleteListener(
-                            new OnCompleteListener<AuthResult>() {
+
+        mAuth.signInWithEmailAndPassword(Email, Pass).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Query checkUser = myRef.child(mAuth.getUid());
+                            checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
-                                        setUser(user);
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        user = snapshot.getValue(User.class);
+                                        userType = user.getType();
+                                        System.out.println(userType);
                                         Toast.makeText(getApplicationContext(), "LogIn Successful", Toast.LENGTH_LONG).show();
                                         if (userType.equals("Business Owner")) {
                                             startActivity(new Intent(getApplicationContext(), BusinessHomePage.class));
                                         }
                                     }
-                                    else{
-                                        Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
-                }
-                else{
-                    username.setError("Username does not exist!!");
-                    username.requestFocus();
-                    return;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
+
 
     public static User getUser() {
         return user;

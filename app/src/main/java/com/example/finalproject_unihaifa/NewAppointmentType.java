@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,11 +28,12 @@ import java.util.Map;
 public class NewAppointmentType extends AppCompatActivity implements View.OnClickListener{
 
     EditText editName, editDuration, editStart, editEnd, editPrice;
-    String name, duration, start, end, price;
+    String name, duration, start, end, price, username;
+    User user;
 
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef, myAppointment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,17 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("User").child(LogIn.getUser().getName()).child("appointmentTypes");
+        myRef = database.getReference("User");
+        myAppointment = database.getReference("Appointment Type");
+        editName = (EditText) findViewById(R.id.appointmentName);
+        editDuration = (EditText) findViewById(R.id.appointmentDuration);
+        editStart = (EditText) findViewById(R.id.appointmentStart);
+        editEnd = (EditText) findViewById(R.id.appointmentEnd);
+        editPrice = (EditText) findViewById(R.id.appointmentPrice);
+        FirebaseUser current = mAuth.getCurrentUser();
+        if(current != null){
+            username = myRef.child(current.getUid()).child("name").toString();
+        }
 
         findViewById(R.id.appointmentCreate).setOnClickListener(this);
     }
@@ -86,14 +98,14 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
             return;
         }
 
-        Query checkUser = myRef.orderByChild("name").equalTo(name);
+        Query checkUser = myAppointment.child(username).orderByChild("TypeName").equalTo(name);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()){
                     AppointmentType newApp = new AppointmentType(name, Integer.valueOf(duration),
                             Integer.valueOf(start), Integer.valueOf(end), Integer.valueOf(price));
-                    myRef.child(name).setValue(newApp);
+                    myAppointment.child(username).child(name).setValue(newApp);
                     ((BusinessUser) LogIn.getUser()).addAppointmentType(newApp);
                 }
                 else{

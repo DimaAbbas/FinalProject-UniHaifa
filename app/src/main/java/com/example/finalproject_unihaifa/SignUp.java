@@ -30,7 +30,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
     String Name, Email, Phone, Password, UserType, description;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef, myAppointment;
 
 
     @Override
@@ -53,6 +53,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("User");
+        myAppointment = database.getReference("Appointment Type");
     }
 
     private void registerUser(){
@@ -116,19 +117,21 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()){
-                    mAuth.createUserWithEmailAndPassword(Email,Password)
+                    mAuth.createUserWithEmailAndPassword(Name,Password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
+                                        String uid = mAuth.getUid();
                                         Toast.makeText(getApplicationContext(),"User Registered Successfully",Toast.LENGTH_LONG).show();
                                         User user;
                                         if (UserType.equals("Business Owner")){
                                             user = new BusinessUser(Name, Phone, Email, Password, UserType, description);
+                                            myAppointment.child(Name).setValue(Name);
                                         } else {
                                             user = new User(Name, Phone, Email, Password, UserType);
                                         }
-                                        myRef.child(Name).setValue(user);
+                                        myRef.child(uid).setValue(user);
                                         startActivity(new Intent(getApplicationContext(), LogIn.class));
                                     }
                                     else{
