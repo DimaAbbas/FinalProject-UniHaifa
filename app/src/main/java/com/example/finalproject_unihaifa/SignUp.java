@@ -127,7 +127,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                                         User user;
                                         if (UserType.equals("Business Owner")){
                                             user = new BusinessUser(Name, Phone, Email, Password, UserType, description);
-                                            myAppointment.child(Name).setValue(Name);
+                                            //myAppointment.child(Name).setValue(Name);
                                         } else {
                                             user = new User(Name, Phone, Email, Password, UserType);
                                         }
