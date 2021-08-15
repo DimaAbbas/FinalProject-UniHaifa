@@ -3,16 +3,10 @@ package com.example.finalproject_unihaifa;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class NewAppointmentType extends AppCompatActivity implements View.OnClickListener{
 
@@ -44,14 +35,28 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("User");
         myAppointment = database.getReference("Appointment Type");
+
         editName = (EditText) findViewById(R.id.appointmentName);
         editDuration = (EditText) findViewById(R.id.appointmentDuration);
         editStart = (EditText) findViewById(R.id.appointmentStart);
         editEnd = (EditText) findViewById(R.id.appointmentEnd);
         editPrice = (EditText) findViewById(R.id.appointmentPrice);
         FirebaseUser current = mAuth.getCurrentUser();
+
         if(current != null){
-            username = myRef.child(current.getUid()).child("name").toString();
+            myRef = myRef.child(current.getUid());
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    username = user.getName();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         findViewById(R.id.appointmentCreate).setOnClickListener(this);
@@ -98,7 +103,7 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
             return;
         }
 
-        Query checkUser = myAppointment.child(username).orderByChild("TypeName").equalTo(name);
+        Query checkUser = myAppointment.child(username).orderByChild("name").equalTo(name);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -106,7 +111,7 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
                     AppointmentType newApp = new AppointmentType(name, Integer.valueOf(duration),
                             Integer.valueOf(start), Integer.valueOf(end), Integer.valueOf(price));
                     myAppointment.child(username).child(name).setValue(newApp);
-                    ((BusinessUser) LogIn.getUser()).addAppointmentType(newApp);
+                    startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                 }
                 else{
                     editName.setError("This appointment type name exists, select another one!");

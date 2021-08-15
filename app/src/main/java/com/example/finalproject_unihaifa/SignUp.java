@@ -126,7 +126,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                                         Toast.makeText(getApplicationContext(), "User Registered Successfully", Toast.LENGTH_LONG).show();
                                         if (UserType.equals("Business Owner")) {
                                             user = new BusinessUser(Name, Phone, Email, Password, UserType, description);
-                                            myAppointment.child(Name).setValue(Name);
+                                            //myAppointment.child(Name).setValue(Name);
                                         } else {
                                             user = new User(Name, Phone, Email, Password, UserType);
                                         }
