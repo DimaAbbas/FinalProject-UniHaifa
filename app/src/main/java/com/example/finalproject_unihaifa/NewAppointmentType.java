@@ -106,6 +106,7 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
         switch(view.getId()){
             case R.id.appointmentCreate:
                 CreateAppointment();
+                finish();
         }
     }
 
