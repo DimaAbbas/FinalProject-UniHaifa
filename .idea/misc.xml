@@ -3,22 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_account_info.xml" value="0.1796875" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_appointments_settings.xml" value="0.1796875" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_home.xml" value="0.1796875" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1503623188405797" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_new_appointment_type.xml" value="0.1796875" />
-        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1796875" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_account_info.xml" value="0.1796875" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_appointments_setting.xml" value="0.5888157894736842" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_appointments_settings.xml" value="0.1621376811594203" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_home.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1796875" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_new_appointment_type.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1796875" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/multi_line.xml" value="0.17119565217391305" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/business_menu.xml" value="0.1796875" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/business_submenu.xml" value="0.1796875" />
       </map>
     </option>
   </component>
