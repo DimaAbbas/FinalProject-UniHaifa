@@ -1,52 +1,62 @@
 package com.example.finalproject_unihaifa;
 
+import java.util.Map;
+
 public class AppointmentType {
     private String name;
-    private int duration;
-    //private boolean[] days = new boolean[7];
-    private int startTime;
-    private int endTime;
+    private Map<String, Boolean> days;
     private int price;
+    private int duration_hours;
+    private int duration_minutes;
+    private int startTime_hours;
+    private int startTime_minutes;
+    private int endTime_hours;
+    private int endTime_minutes;
+
 
     public AppointmentType(){
 
     }
 
-    public AppointmentType(String name, int duration, int startTime, int endTime, int price){
+    public AppointmentType(String name, Map<String, Boolean> days, int price, int durationH, int durationM, int startTimeH,
+                           int startTimeM, int endTimeH, int endTimeM){
         this.name = name;
-        this.duration = duration;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.days = days;
         this.price = price;
-    }
-
-    public AppointmentType(String name, int duration, boolean[] days, int startTime, int endTime, int price){
-        this.name = name;
-        this.duration = duration;
-        //this.days = days;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.price = price;
+        this.duration_hours = durationH;
+        this.duration_minutes = durationM;
+        this.startTime_hours = startTimeH;
+        this.startTime_minutes = startTimeM;
+        this.endTime_hours = endTimeH;
+        this.endTime_minutes = endTimeM;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public int getDuration  (){
-        return this.duration;
+    public int getDuration_hours() {
+        return duration_hours;
     }
 
-    /*public boolean[] getDays() {
-        return days;
-    }*/
-
-    public int getStartTime() {
-        return startTime;
+    public int getDuration_minutes() {
+        return duration_minutes;
     }
 
-    public int getEndTime() {
-        return endTime;
+    public int getStartTime_hours() {
+        return startTime_hours;
+    }
+
+    public int getStartTime_minutes() {
+        return startTime_minutes;
+    }
+
+    public int getEndTime_hours() {
+        return endTime_hours;
+    }
+
+    public int getEndTime_minutes() {
+        return endTime_minutes;
     }
 
     public int getPrice() {
