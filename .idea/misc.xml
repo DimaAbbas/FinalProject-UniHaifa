@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_booking.xml" value="0.1" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/multi_line.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />
