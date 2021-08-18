@@ -94,6 +94,9 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                                         if (userType.equals("Business Owner")) {
                                             startActivity(new Intent(getApplicationContext(), BusinessHomePage.class));
                                         }
+                                        else {
+                                            startActivity(new Intent(getApplicationContext(), CustomerHomePage.class));
+                                        }
                                     }
                                 }
 

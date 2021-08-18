@@ -25,6 +25,9 @@
         <activity android:name=".AppointmentsSettings"/>
         <activity android:name=".NewAppointmentType"/>
         <activity android:name=".ViewAppointmentType"/>
+        <activity android:name=".CustomerHomePage"/>
+        <activity android:name=".SearchResult"/>
+        <activity android:name=".Booking"/>
     </application>
 
 </manifest>

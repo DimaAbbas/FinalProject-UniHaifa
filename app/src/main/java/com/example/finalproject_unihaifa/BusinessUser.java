@@ -8,6 +8,10 @@ public class BusinessUser extends User {
     int appointmentsTypesCount;
     List<AppointmentType> appointmentTypes;
 
+    public BusinessUser(){
+
+    }
+
     public BusinessUser (String name, String phone, String email, String password, String type,
                          String description) {
         super(name, phone, email, password, type);
@@ -31,4 +35,7 @@ public class BusinessUser extends User {
     public String getDescription() {return this.description;}
     public int getAppointmentsTypesCount() {return this.appointmentsTypesCount;}
     public List<AppointmentType> getAppointmentTypes() {return this.appointmentTypes;}
+
+    //TODO:
+    //add ArrayList<Appointment> app -> have all the appointments at this business user
 }
