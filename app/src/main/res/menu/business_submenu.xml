@@ -9,7 +9,7 @@
         android:title="Appointments Settings" />
     <item
         android:id="@+id/customers_list"
-        android:title="Customers List" />
+        android:title="Featured Customers" />
     <item
         android:id="@+id/log_out"
         android:title="Log out" />
