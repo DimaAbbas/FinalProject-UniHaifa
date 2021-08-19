@@ -1,11 +1,12 @@
 package com.example.finalproject_unihaifa;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,8 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class BusinessHomePage extends AppCompatActivity implements View.OnClickListener{
 
@@ -68,7 +67,35 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                         break;
                     case R.id.customers_list:
-                        Toast.makeText(getApplicationContext(), "customer list clicked", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "customer list clicked", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), FeaturedCustomers.class));
+                        break;
+
+                    case R.id.log_out:{
+                        Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
+                        Dialog dialog = new Dialog(BusinessHomePage.this);
+                        dialog.setContentView(R.layout.dialog_logout);
+                        dialog.setTitle("lou out");
+
+                        ((Button) dialog.findViewById(R.id.logout_dialog)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                FirebaseAuth.getInstance().signOut();
+                                dialog.dismiss();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
+                        });
+
+                        ((Button) dialog.findViewById(R.id.cancel_logout)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                        dialog.getWindow().setLayout(1000, 600);
+                        break;
+                    }
 
                     default:
                         break;
