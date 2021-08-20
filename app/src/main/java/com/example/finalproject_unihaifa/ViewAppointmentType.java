@@ -324,7 +324,6 @@ public class ViewAppointmentType extends AppCompatActivity implements View.OnCli
                 else {
                     setEditing(false);
                     editAppointmentType();
-                    System.out.println("save clicked");
                 }
         }
     }

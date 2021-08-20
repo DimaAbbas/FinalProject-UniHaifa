@@ -106,7 +106,6 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
         switch(view.getId()){
             case R.id.appointmentCreate:
                 CreateAppointment();
-                finish();
         }
     }
 
@@ -179,7 +178,8 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
                             Integer.valueOf(hoursEnd), Integer.valueOf(minutesEnd));
                     myAppointment.child(username).child(name).setValue(newApp);
                     myAppointment.child(username).child(name).child("days").setValue(days);
-                    startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
+                    finish();
+                    //startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                 }
                 else{
                     editName.setError("This appointment type name exists, select another one!");
