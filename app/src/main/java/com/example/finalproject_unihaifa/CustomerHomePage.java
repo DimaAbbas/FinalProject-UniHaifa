@@ -58,7 +58,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
-                    app = user.getAppointments();
+                    app = user.Appointments();
                     for(Appointment i : app){
                         item = new HashMap<String,String>();
                         item.put("line1", i.getType() + " appointment at " + i.getBusinessN());
