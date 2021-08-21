@@ -33,13 +33,21 @@ public class AppointmentsSettings extends AppCompatActivity implements View.OnCl
     ListView appListView;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef, selectedApp;
 
     List list = new ArrayList<>();
     SimpleAdapter adapter;
     Map<String, String> item;
 
     String username;
+
+    ArrayList<String> appName = new ArrayList<String>();
+    ArrayList<String> appDuration = new ArrayList<String>();
+    ArrayList<String> appPrice = new ArrayList<String>();
+    ArrayList<Integer> editSymbol = new ArrayList<Integer>();
+    AppointmentTypeListAdapter myAdapter;
+
+    AppointmentType appointmentType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +78,56 @@ public class AppointmentsSettings extends AppCompatActivity implements View.OnCl
         findViewById(R.id.addType).setOnClickListener(this);
         appListView = (ListView) findViewById(R.id.appTypesList);
 
-        adapter = new SimpleAdapter(this, list, R.layout.multi_line,
+        myAdapter = new AppointmentTypeListAdapter(this, appName, appDuration,
+                appPrice, editSymbol);
+        appListView.setAdapter(myAdapter);
+        myAdapter.notifyDataSetChanged();
+
+        myRef = database.getReference("Appointment Type");
+        Query query = myRef.child(username);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                appName.clear();
+                appDuration.clear();
+                appPrice.clear();
+                editSymbol.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    if (ds.exists()) {
+                        AppointmentType appointmentType = ds.getValue(AppointmentType.class);
+                        appName.add(appointmentType.getName());
+                        appDuration.add("duration:" + appointmentType.getDuration_hours() +
+                                ":" + appointmentType.getDuration_minutes());
+                        appPrice.add("price: " + appointmentType.getPrice());
+                        editSymbol.add(R.drawable.ic_baseline_edit_24);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        /*appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String str = (String) appListView.getItemAtPosition(position);
+                Toast.makeText(getApplicationContext(),str, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), ViewAppointmentType.class);
+                Bundle b = new Bundle();
+                b.putString("appName", str);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });*/
+
+
+
+
+        /*adapter = new SimpleAdapter(this, list, R.layout.multi_line,
                 new String[] {"line1", "line2"}, new int[] {R.id.line_a, R.id.line_b});
         appListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -84,9 +141,6 @@ public class AppointmentsSettings extends AppCompatActivity implements View.OnCl
                 for (DataSnapshot ds:snapshot.getChildren()){
                     if (ds.exists()) {
                         AppointmentType appointmentType = ds.getValue(AppointmentType.class);
-                        /*String txt = appointmentType.getName() + ", duration: " + appointmentType.getDuration_hours() +
-                                ":" + appointmentType.getDuration_minutes() + ", price: " + appointmentType.getPrice();
-                        list.add(txt);*/
                         item = new HashMap<String, String>();
                         item.put("line1", appointmentType.getName());
                         item.put("line2", "duration: " + appointmentType.getDuration_hours() +
@@ -103,7 +157,7 @@ public class AppointmentsSettings extends AppCompatActivity implements View.OnCl
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
     }
 
