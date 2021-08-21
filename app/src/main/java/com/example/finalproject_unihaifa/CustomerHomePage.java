@@ -70,7 +70,6 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user_ = snapshot.getValue(User.class);
                     setUser(user_);
-                    app = user_.getAppointments();
                     username.setText(user_.getName());
                     myApp = myApp.child(user_.getName());
                     myApp.addListenerForSingleValueEvent(new ValueEventListener() {
