@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Appointment {
-    private Time startTime, finishTime;
+    private Time startTime, endTime;
     private String customerN, businessN, Type;
     private Date date;
 
@@ -13,9 +13,9 @@ public class Appointment {
 
     }
 
-    public Appointment(Time startTime, Time finishTime, String customerN, String businessN, String type, Date date){
+    public Appointment(Time startTime, Time endTime, String customerN, String businessN, String type, Date date){
         this.startTime = startTime;
-        this.finishTime = finishTime;
+        this.endTime = endTime;
         this.customerN = customerN;
         this.businessN = businessN;
         this.Type = type;
@@ -29,12 +29,16 @@ public class Appointment {
         return startTime;
     }
 
+    public Time getEndTime() {
+        return endTime;
+    }
+
     public String getBusinessN() {
         return businessN;
     }
 
     public String getDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String s_date = sdf.format(date);
         return s_date;
     }

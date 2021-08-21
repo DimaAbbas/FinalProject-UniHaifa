@@ -62,4 +62,8 @@ public class AppointmentType {
     public int getPrice() {
         return price;
     }
+
+    public Map<String, Boolean> Days() {
+        return days;
+    }
 }

@@ -54,16 +54,13 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         business.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        search = com.example.finalproject_unihaifa.CustomerHomePage.getSearchName();
-        setResultList(search);
-
         searchTxt1 = (EditText) findViewById(R.id.searchTxt1);
-        findViewById(R.id.search_btn1).setOnClickListener(this);
+        findViewById(R.id.search_btn).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == (R.id.search_btn1)){
+        if(v.getId() == (R.id.search_btn)){
             search = searchTxt1.getText().toString().trim();
             setResultList(search);
         }
@@ -80,14 +77,16 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for(DataSnapshot ds: snapshot.getChildren()){
-                        BusinessUser user = ds.getValue(BusinessUser.class);
-                        if(user.getType().equals("Business Owner")){
-                            item = new HashMap<String,String>();
-                            item.put("line1", user.getName());
-                            item.put("line2", user.getDescription());
-                            list.add(item);
-                            users.add(user);
-                            adapter.notifyDataSetChanged();
+                        if(ds.exists()){
+                            BusinessUser user = ds.getValue(BusinessUser.class);
+                            if(user.getType().equals("Business Owner")){
+                                item = new HashMap<String,String>();
+                                item.put("line1", user.getName());
+                                item.put("line2", user.getDescription());
+                                list.add(item);
+                                users.add(user);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }
@@ -106,7 +105,10 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         //TODO
         String name = parent.getItemAtPosition(position).toString();
         bu = users.get(position);
-        startActivity(new Intent(getApplicationContext(), Booking.class));
+        if(bu != null){
+            setBusinessUser(bu);
+            startActivity(new Intent(getApplicationContext(), Booking.class));
+        }
     }
 
     public void setBusinessUser(BusinessUser user){

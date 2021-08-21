@@ -4,9 +4,9 @@ import java.util.List;
 
 public class BusinessUser extends User {
 
-    String description;
+    private String description;
     int appointmentsTypesCount;
-    List<AppointmentType> appointmentTypes;
+    private List<AppointmentType> appointmentTypes;
 
     public BusinessUser(){
 
@@ -34,8 +34,5 @@ public class BusinessUser extends User {
 
     public String getDescription() {return this.description;}
     public int getAppointmentsTypesCount() {return this.appointmentsTypesCount;}
-    public List<AppointmentType> getAppointmentTypes() {return this.appointmentTypes;}
 
-    //TODO:
-    //add ArrayList<Appointment> app -> have all the appointments at this business user
 }
