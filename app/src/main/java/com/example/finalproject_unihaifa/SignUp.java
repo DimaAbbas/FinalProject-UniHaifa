@@ -112,12 +112,50 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             }
         }
 
-        mAuth.createUserWithEmailAndPassword(Email, Password)
+        myRef.orderByChild("name").equalTo(Name).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                if (UserType.equals("Business Owner")) {
+                                    BusinessUser businessUser = new BusinessUser(Name, Phone, Email, Password, UserType, description);
+                                    myRef.child(mAuth.getUid()).setValue(businessUser);
+                                } else {
+                                    User customer = new User(Name, Phone, Email, Password, UserType);
+                                    myRef.child(mAuth.getUid()).setValue(customer);
+                                }
+
+                                startActivity(new Intent(getApplicationContext(), LogIn.class));
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Failed to register! Change the email address", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                } else {
+                    editName.setError("This username exists, select another one!");
+                    editName.requestFocus();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        /*mAuth.createUserWithEmailAndPassword(Email, Password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String uid = mAuth.getUid();
+                            System.out.println(uid);
                             Query checkUser = myRef.child(uid).orderByChild("name").equalTo(Name);
                             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -126,7 +164,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                                         Toast.makeText(getApplicationContext(), "User Registered Successfully", Toast.LENGTH_LONG).show();
                                         if (UserType.equals("Business Owner")) {
                                             user = new BusinessUser(Name, Phone, Email, Password, UserType, description);
-                                            //myAppointment.child(Name).setValue(Name);
                                         } else {
                                             user = new User(Name, Phone, Email, Password, UserType);
                                         }
@@ -149,7 +186,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
 
                         }
                     }
-                });
+                });*/
     }
 
     @Override

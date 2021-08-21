@@ -70,7 +70,7 @@ public class User {
         this.appointments.remove(app);
     }
 
-    public ArrayList<Appointment> getAppointments() {
+    public ArrayList<Appointment> Appointments() {
         appointments = new ArrayList<>();
         Time t1 = new Time(10,0,0);
         Time t2 = new Time(13,0,0);

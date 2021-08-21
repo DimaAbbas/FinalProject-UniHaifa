@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
         edit_phone = (EditText) findViewById(R.id.edit_phone_info);
 
         findViewById(R.id.editAccountSwitch).setOnClickListener(this);
+        findViewById(R.id.reset_password).setOnClickListener(this);
 
 
         myRef = myRef.child(mAuth.getCurrentUser().getUid());
@@ -86,6 +88,9 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                     editAccountInfo();
                     ((Switch)findViewById(R.id.editAccountSwitch)).setText("edit");
                 }
+
+            case R.id.reset_password:
+                //resetPassword();
         }
     }
 
@@ -119,6 +124,24 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 myRef.child("email").setValue(email);
                 myRef.child("phone").setValue(phone);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void resetPassword() {
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String reset_email = (snapshot.getValue(User.class)).getEmail();
+
+                mAuth.sendPasswordResetEmail(reset_email);
+                Toast.makeText(getApplicationContext(), "reset email sent", Toast.LENGTH_SHORT).show();
             }
 
             @Override
