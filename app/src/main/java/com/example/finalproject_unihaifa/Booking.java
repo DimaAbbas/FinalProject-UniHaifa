@@ -49,7 +49,8 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     GridView gridView;
     BusinessUser user;
     String name, newtxt;
-    BusinessUser bu;
+    //BusinessUser bu;
+    String bu;
     CalendarView calendar;
     ArrayList<String> typesList = new ArrayList<String>();
     ArrayList<String> options = new ArrayList<String>();
@@ -70,7 +71,13 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
-        bu = SearchResult.getBu();
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        myApp = database.getReference("Appointments");
+        myRef = database.getReference("Appointment Type");
+
+        bu = getIntent().getExtras().getString("businessUser");
+
         gridView = (GridView) findViewById(R.id.gridView);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -80,15 +87,10 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         setPopupList();
         setListeners();
 
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        myApp = database.getReference("Appointments");
-        myRef = database.getReference("Appointment Type");
-
 
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         txt = (TextView) findViewById(R.id.textView13);
-        name = bu.getName();
+        name = bu;
         newtxt = txt.getText().toString().trim();
         newtxt += " " + name;
         txt.setText(newtxt);
@@ -128,7 +130,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     }
 
     private void setPopupList() {
-        Query query = myRef.child(bu.getName());
+        Query query = myRef.child(bu);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -145,7 +147,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             types.setText(parent.getItemAtPosition(position).toString());//we set the selected element in the EditText
-                            Query q = myRef.child(bu.getName()).child("name").equalTo(parent.getItemAtPosition(position).toString());
+                            Query q = myRef.child(bu).child("name").equalTo(parent.getItemAtPosition(position).toString());
                             q.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -181,7 +183,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             if(select.Days().get(day) == false)
                 Toast.makeText(getApplicationContext(), "No such booking received today", Toast.LENGTH_SHORT).show();
             else {
-                Query query = myApp.child(bu.getName());
+                Query query = myApp.child(bu);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -296,7 +298,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         Time t2 = new Time(Integer.parseInt(s.substring(14,16)), Integer.parseInt(s.substring(17,19)), 0);
         System.out.println(selectDate);
         app = new Appointment(t1,t2,CustomerHomePage.getUser().getName(),
-                bu.getName(), select.getName(), selectDate);
+                bu, select.getName(), selectDate);
     }
 
     @Override

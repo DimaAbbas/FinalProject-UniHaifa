@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SearchResult extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SearchResult extends AppCompatActivity implements View.OnClickListener {
     String search;
     EditText searchTxt1;
     FirebaseAuth mAuth;
@@ -35,9 +35,12 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
     List list = new ArrayList<>();
     Map<String,String> item;
     ListView business;
-    SimpleAdapter adapter;
+    //SimpleAdapter adapter;
     ArrayList<BusinessUser> users = new ArrayList<>();
     static BusinessUser bu;
+
+    SearchResultListAdapter adapter;
+    ArrayList<String> businessUsernames = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +52,12 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         myRef = database.getReference("User");
         business = (ListView) findViewById(R.id.business);
 
-        adapter = new SimpleAdapter(this, list, R.layout.multi_line,
+        /*adapter = new SimpleAdapter(this, list, R.layout.multi_line,
                 new String[] {"line1","line2"}, new int[] {R.id.line_a,R.id.line_b});
+        business.setAdapter(adapter);
+        adapter.notifyDataSetChanged();*/
+
+        adapter = new SearchResultListAdapter(this, businessUsernames);
         business.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -71,7 +78,8 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         if(search == null || search.length() == 0)
             Toast.makeText(getApplicationContext(), "Please enter a business name", Toast.LENGTH_SHORT).show();
         else {
-            list.clear();
+            //list.clear();
+            businessUsernames.clear();
             Query check = myRef.orderByChild("name").equalTo(search);
             check.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -80,11 +88,12 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                         if(ds.exists()){
                             BusinessUser user = ds.getValue(BusinessUser.class);
                             if(user.getType().equals("Business Owner")){
-                                item = new HashMap<String,String>();
-                                item.put("line1", user.getName());
-                                item.put("line2", user.getDescription());
-                                list.add(item);
-                                users.add(user);
+                                //item = new HashMap<String,String>();
+                                //item.put("line1", user.getName());
+                                //item.put("line2", user.getDescription());
+                                //list.add(item);
+                                //users.add(user);
+                                businessUsernames.add(user.getName());
                                 adapter.notifyDataSetChanged();
                             }
                         }
@@ -96,11 +105,11 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
-            business.setOnItemClickListener(this);
+            //business.setOnItemClickListener(this);
         }
     }
 
-    @Override
+    /*@Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //TODO
         String name = parent.getItemAtPosition(position).toString();
@@ -109,7 +118,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
             setBusinessUser(bu);
             startActivity(new Intent(getApplicationContext(), Booking.class));
         }
-    }
+    }*/
 
     public void setBusinessUser(BusinessUser user){
         bu = user;
