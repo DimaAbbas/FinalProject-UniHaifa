@@ -1,11 +1,13 @@
 package com.example.finalproject_unihaifa;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -63,18 +65,18 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
         FirebaseUser current = mAuth.getCurrentUser();
 
         if(current != null){
-            list.clear();
             Query query = myRef.child(current.getUid());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+            query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user_ = snapshot.getValue(User.class);
                     setUser(user_);
-                    username.setText(user_.getName());
+                    username.setText(user_.getName() + " ,");
                     myApp = myApp.child(user_.getName());
-                    myApp.addListenerForSingleValueEvent(new ValueEventListener() {
+                    myApp.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            list.clear();
                             for(DataSnapshot i : snapshot.getChildren()){
                                 if(i.exists()){
                                     Appointment p = i.getValue(Appointment.class);
@@ -101,8 +103,8 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
         }
         apps.setOnItemClickListener(this);
 
-        findViewById(R.id.C_account).setOnClickListener(this);
-        findViewById(R.id.search_btn).setOnClickListener(this);
+        findViewById(R.id.B_account).setOnClickListener(this);
+        findViewById(R.id.B_new_appointment).setOnClickListener(this);
     }
 
     @Override
@@ -113,10 +115,10 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.C_account:
+            case R.id.B_account:
                 showPopup(v);
                 break;
-            case R.id.search_btn:
+            case R.id.B_new_appointment:
                 startActivity(new Intent(getApplicationContext(), SearchResult.class));
                 break;
         }
@@ -140,7 +142,29 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                     case R.id.bu_list:
                         //TODO
                     case R.id.log_out1:
-                        //TODO
+                        Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
+                        Dialog dialog = new Dialog(CustomerHomePage.this);
+                        dialog.setContentView(R.layout.dialog_logout);
+                        dialog.setTitle("lou out");
+
+                        ((Button) dialog.findViewById(R.id.logout_dialog)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                FirebaseAuth.getInstance().signOut();
+                                dialog.dismiss();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
+                        });
+
+                        ((Button) dialog.findViewById(R.id.cancel_logout)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                        dialog.getWindow().setLayout(1000, 600);
+                        break;
                 }
 
                 return true;
