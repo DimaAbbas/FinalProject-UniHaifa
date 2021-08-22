@@ -50,20 +50,23 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     BusinessUser user;
     String name, newtxt;
     //BusinessUser bu;
-    String bu;
+    String bu, s;
     CalendarView calendar;
     ArrayList<String> typesList = new ArrayList<String>();
     ArrayList<String> options = new ArrayList<String>();
     HashMap<Double,Double> booking = new HashMap<Double,Double>();
     ListPopupWindow statusPopupList;
     AppCompatEditText types;
-    static AppointmentType select = null;
-    static Date selectDate = null;
+    AppointmentType select = null;
+    Date selectDate = null;
+    HashMap<String,Boolean> daysMap = new HashMap<String,Boolean>();
     Appointment app;
     String[] days = { "sun", "mon", "tue", "wed", "thu", "fri", "sat" };
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myApp, myRef;
+    ArrayAdapter<String > adapter;
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
 
     @Override
@@ -87,8 +90,6 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         setPopupList();
         setListeners();
 
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         txt = (TextView) findViewById(R.id.textView13);
         name = bu;
         newtxt = txt.getText().toString().trim();
@@ -147,11 +148,15 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             types.setText(parent.getItemAtPosition(position).toString());//we set the selected element in the EditText
-                            Query q = myRef.child(bu).child("name").equalTo(parent.getItemAtPosition(position).toString());
+                            Query q = myRef.child(bu).child(parent.getItemAtPosition(position).toString());
                             q.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(snapshot.exists()){
+                                        for(int i = 0; i < 7; i++){
+                                            setDaysMap(days[i],
+                                                    snapshot.child("days").child(days[i]).getValue(Boolean.class));
+                                        }
                                         AppointmentType t = snapshot.getValue(AppointmentType.class);
                                         setSelectedType(t);
                                     }
@@ -179,9 +184,16 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     public void CheckAppointment(String currentDate, String day){
         booking.clear();
         options.clear();
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, options);
+        gridView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         if(select != null){
-            if(select.Days().get(day) == false)
-                Toast.makeText(getApplicationContext(), "No such booking received today", Toast.LENGTH_SHORT).show();
+            if(daysMap.get(day) == false){
+                options.clear();
+                Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
+            }
             else {
                 Query query = myApp.child(bu);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -191,10 +203,10 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
                                 if(p.getDate().equals(currentDate)){
-                                    double h = Double.parseDouble((String) p.getStartTime().toString().subSequence(0,2)) +
-                                            Double.parseDouble((String) p.getStartTime().toString().subSequence(3,5)) / 60.0;
-                                    double h1 = Double.parseDouble((String) p.getEndTime().toString().subSequence(0,2)) +
-                                            Double.parseDouble((String) p.getEndTime().toString().subSequence(3,5)) / 60.0;
+                                    double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
+                                            Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
+                                    double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
+                                            Double.parseDouble((String) p.getEndTime().subSequence(3,5)) / 60.0;
 
                                     booking.put(h,h1);
                                 }
@@ -206,29 +218,27 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         for(double i = s; i <= e; i++){
                             double finalI = i;
                             if(!booking.isEmpty()){
-                                System.out.println("Yes");
                                 booking.forEach((k, v)->{
-                                    System.out.println(k + " " + v + " " + finalI);
                                     if(k > finalI || finalI >= v){
                                         int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
                                         int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
                                         Time t1 = new Time(h,m,0);
                                         Time t2 = new Time(h1,m1,0);
 
-                                        options.add("from " + t1.toString().subSequence(0,5) +
+                                        setOptions("from " + t1.toString().subSequence(0,5) +
                                                 " to " + t2.toString().subSequence(0,5));
                                     }
                                 });
                             }
                             else {
-
                                 int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
                                 int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
                                 Time t1 = new Time(h,m,0);
                                 Time t2 = new Time(h1,m1,0);
 
-                                options.add("from " + t1.toString().subSequence(0,5) +
+                                setOptions("from " + t1.toString().subSequence(0,5) +
                                         " to " + t2.toString().subSequence(0,5));
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     }
@@ -238,52 +248,9 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
 
                     }
                 });
-                /*ArrayList<Appointment> bookingList = bu.BookingList();
-                for(Appointment i: bookingList){
-                    if(i.getDate().equals(currentDate)){
-                        double h = Double.parseDouble((String) i.getStartTime().toString().subSequence(0,2)) + Double.parseDouble((String) i.getStartTime().toString().subSequence(3,5)) / 60.0;
-                        double h1 = Double.parseDouble((String) i.getEndTime().toString().subSequence(0,2)) + Double.parseDouble((String) i.getEndTime().toString().subSequence(3,5)) / 60.0;
-
-                        booking.put(h,h1);
-                    }
-                }
-                double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
-                double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
-                double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
-                for(double i = s; i <= e; i++){
-                    double finalI = i;
-                    if(!booking.isEmpty()){
-                        System.out.println("Yes");
-                        booking.forEach((k, v)->{
-                            System.out.println(k + " " + v + " " + finalI);
-                            if(k > finalI || finalI >= v){
-                                int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
-                                int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
-                                Time t1 = new Time(h,m,0);
-                                Time t2 = new Time(h1,m1,0);
-
-                                options.add("from " + t1.toString().subSequence(0,5) +
-                                        " to " + t2.toString().subSequence(0,5));
-                            }
-                        });
-                    }
-                    else {
-                        int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
-                        int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
-                        Time t1 = new Time(h,m,0);
-                        Time t2 = new Time(h1,m1,0);
-
-                        options.add("from " + t1.toString().subSequence(0,5) +
-                                " to " + t2.toString().subSequence(0,5));
-                    }
-                }*/
             }
         }
        else Toast.makeText(getApplicationContext(), "Select the type of the appointment", Toast.LENGTH_SHORT).show();
-
-       System.out.println(options);
-       ArrayAdapter<String > adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, options);
-       gridView.setAdapter(adapter);
 
        gridView.setOnItemClickListener(this);
     }
@@ -291,26 +258,36 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         findViewById(R.id.btn).setVisibility(View.VISIBLE);
-        String s = parent.getItemAtPosition(position).toString();
-        //TODO:
-        // add a new appointment to the business and to the customer
+        s = parent.getItemAtPosition(position).toString();
         Time t1 = new Time(Integer.parseInt(s.substring(5,7)), Integer.parseInt(s.substring(8,10)), 0);
         Time t2 = new Time(Integer.parseInt(s.substring(14,16)), Integer.parseInt(s.substring(17,19)), 0);
         System.out.println(selectDate);
-        app = new Appointment(t1,t2,CustomerHomePage.getUser().getName(),
-                bu, select.getName(), selectDate);
+        app = new Appointment(t1.toString().substring(0,5),t2.toString().substring(0,5)
+                ,CustomerHomePage.getUser().getName(),
+                bu, select.getName(), df.format(selectDate));
+
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.btn){
-            //TODO
-            // add the app object to the customer and the business owner
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
+            options.remove(s);
+            adapter.notifyDataSetChanged();
+            myApp.child(bu).child(app.getType()).setValue(app);
+            myApp.child(app.getCustomerN()).child(app.getType()).setValue(app);
         }
     }
 
     public void setSelectedType(AppointmentType p){
         select = p;
+    }
+
+    public void setDaysMap(String day, Boolean tf){
+        daysMap.put(day,tf);
+    }
+
+    public void setOptions(String s){
+        options.add(s);
     }
 }

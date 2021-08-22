@@ -109,17 +109,6 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*@Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO
-        String name = parent.getItemAtPosition(position).toString();
-        bu = users.get(position);
-        if(bu != null){
-            setBusinessUser(bu);
-            startActivity(new Intent(getApplicationContext(), Booking.class));
-        }
-    }*/
-
     public void setBusinessUser(BusinessUser user){
         bu = user;
     }

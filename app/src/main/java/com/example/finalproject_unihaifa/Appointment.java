@@ -5,31 +5,32 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Appointment {
-    private Time startTime, endTime;
-    private String customerN, businessN, Type;
-    private Date date;
+    private String startTime, endTime;
+    private String customerN, businessN, type;
+    private String date;
 
     public Appointment(){
 
     }
 
-    public Appointment(Time startTime, Time endTime, String customerN, String businessN, String type, Date date){
+    public Appointment(String startTime, String endTime, String customerN, String businessN, String type, String date){
         this.startTime = startTime;
         this.endTime = endTime;
         this.customerN = customerN;
         this.businessN = businessN;
-        this.Type = type;
+        this.type = type;
         this.date = date;
     }
+
     public String getType() {
-        return Type;
+        return type;
     }
 
-    public Time getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public Time getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
@@ -38,8 +39,10 @@ public class Appointment {
     }
 
     public String getDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String s_date = sdf.format(date);
-        return s_date;
+        return date;
+    }
+
+    public String getCustomerN() {
+        return customerN;
     }
 }
