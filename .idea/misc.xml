@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_booking.xml" value="0.17617753623188406" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_customer_home.xml" value="0.1" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_search_result.xml" value="0.17617753623188406" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/dialog_logout.xml" value="0.17617753623188406" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_item.xml" value="0.1796875" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_search_result.xml" value="0.17617753623188406" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />
@@ -38,9 +44,6 @@
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/multi_line.xml" value="0.17119565217391305" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/business_menu.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/business_submenu.xml" value="0.1796875" />
-        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/customer_menu.xml" value="0.1796875" />
-        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/customer_submenu.xml" value="0.1796875" />
-        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/types_menu.xml" value="0.1796875" />
       </map>
     </option>
   </component>

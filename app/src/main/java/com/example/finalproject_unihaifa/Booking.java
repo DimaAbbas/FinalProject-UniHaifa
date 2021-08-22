@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -49,7 +50,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     GridView gridView;
     BusinessUser user;
     String name, newtxt;
-    //BusinessUser bu;
+    Date currentDate;
     String bu, s;
     CalendarView calendar;
     ArrayList<String> typesList = new ArrayList<String>();
@@ -65,8 +66,8 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myApp, myRef;
-    ArrayAdapter<String > adapter;
-    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    ArrayAdapter adapter;
+    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
 
     @Override
@@ -79,9 +80,14 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         myApp = database.getReference("Appointments");
         myRef = database.getReference("Appointment Type");
 
+        currentDate = Calendar.getInstance().getTime();
         bu = getIntent().getExtras().getString("businessUser");
 
         gridView = (GridView) findViewById(R.id.gridView);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, options);
+        gridView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().setStatusBarColor(getResources().getColor(R.color.background));
@@ -102,8 +108,12 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Date currentDate = Calendar.getInstance().getTime();
                 String cd = df.format(currentDate);
+
+                findViewById(R.id.btn).setVisibility(View.INVISIBLE);
+                options.clear();
+                booking.clear();
+                adapter.notifyDataSetChanged();
 
                 if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > (month+1)
                         ||(Integer.parseInt(cd.substring(0,2)) > dayOfMonth && Integer.parseInt(cd.substring(3,5)) == (month+1)))
@@ -141,12 +151,15 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         typesList.add(app.getName());
                     }
                     statusPopupList = new ListPopupWindow(Booking.this);
-                    ArrayAdapter adapter = new ArrayAdapter<String>(Booking.this, R.layout.list_item, R.id.type, typesList);
+                    ArrayAdapter adapter1 = new ArrayAdapter<String>(Booking.this, R.layout.list_item, R.id.type, typesList);
                     statusPopupList.setAnchorView(types); //this let as set the popup below the EditText
-                    statusPopupList.setAdapter(adapter);
+                    statusPopupList.setAdapter(adapter1);
                     statusPopupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            options.clear();
+                            adapter.notifyDataSetChanged();
+
                             types.setText(parent.getItemAtPosition(position).toString());//we set the selected element in the EditText
                             Query q = myRef.child(bu).child(parent.getItemAtPosition(position).toString());
                             q.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -181,16 +194,10 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     }
 
     @SuppressLint("NewApi")
-    public void CheckAppointment(String currentDate, String day){
-        booking.clear();
-        options.clear();
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, options);
-        gridView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+    public void CheckAppointment(String cd, String day){
 
         if(select != null){
-            if(daysMap.get(day) == false){
+            if(daysMap.get(day) == false || currentDate.equals(cd)){
                 options.clear();
                 Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
             }
@@ -202,7 +209,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         for(DataSnapshot i : snapshot.getChildren()){
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
-                                if(p.getDate().equals(currentDate)){
+                                if(p.getDate().equals(cd)){
                                     double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
                                             Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
                                     double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
@@ -215,29 +222,33 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
                         double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                         double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
-                        for(double i = s; i <= e; i++){
-                            double finalI = i;
-                            if(!booking.isEmpty()){
-                                booking.forEach((k, v)->{
-                                    if(k > finalI || finalI >= v){
-                                        int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
-                                        int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
-                                        Time t1 = new Time(h,m,0);
-                                        Time t2 = new Time(h1,m1,0);
 
-                                        setOptions("from " + t1.toString().subSequence(0,5) +
-                                                " to " + t2.toString().subSequence(0,5));
+                        for(double i = s; i <= e; i++){
+                            double j = i, v;
+                            int h = (int) j; int m = (int) ((j%1) * 60.0);
+                            int h1 = (int) (j+d); int m1 = (int) (((j+d)%1)*60.0);
+                            Time t1 = new Time(h,m,0);
+                            Time t2 = new Time(h1,m1,0);
+                            String str = "from " + t1.toString().subSequence(0,5) +
+                                    " to " + t2.toString().subSequence(0,5);
+                            if(!booking.isEmpty()){
+                                for(double k : booking.keySet()){
+                                    v = booking.get(k);
+                                    if((j <= k && k < (j+d)) || (j < v && v <= (j+d))){
+                                        if(options.contains(str)) {
+                                            options.remove(str);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                        break;
                                     }
-                                });
+                                    else if(!options.contains(str)) {
+                                        setOptions(str);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
                             }
                             else {
-                                int h = (int) finalI; int m = (int) ((finalI%1) * 60.0);
-                                int h1 = (int) (finalI+d); int m1 = (int) (((finalI+d)%1)*60.0);
-                                Time t1 = new Time(h,m,0);
-                                Time t2 = new Time(h1,m1,0);
-
-                                setOptions("from " + t1.toString().subSequence(0,5) +
-                                        " to " + t2.toString().subSequence(0,5));
+                                setOptions(str);
                                 adapter.notifyDataSetChanged();
                             }
                         }
@@ -265,7 +276,6 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         app = new Appointment(t1.toString().substring(0,5),t2.toString().substring(0,5)
                 ,CustomerHomePage.getUser().getName(),
                 bu, select.getName(), df.format(selectDate));
-
     }
 
     @Override
@@ -274,8 +284,9 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
             options.remove(s);
             adapter.notifyDataSetChanged();
-            myApp.child(bu).child(app.getType()).setValue(app);
-            myApp.child(app.getCustomerN()).child(app.getType()).setValue(app);
+            String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
+            myApp.child(bu).child(str).setValue(app);
+            myApp.child(app.getCustomerN()).child(str).setValue(app);
         }
     }
 
