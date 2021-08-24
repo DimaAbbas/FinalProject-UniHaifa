@@ -51,7 +51,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     BusinessUser user;
     String name, newtxt;
     Date currentDate;
-    String bu, s;
+    String bu, s, cd;
     CalendarView calendar;
     ArrayList<String> typesList = new ArrayList<String>();
     ArrayList<String> options = new ArrayList<String>();
@@ -108,7 +108,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String cd = df.format(currentDate);
+                cd = df.format(currentDate);
 
                 findViewById(R.id.btn).setVisibility(View.INVISIBLE);
                 options.clear();
@@ -124,8 +124,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                     c.set(year, month, dayOfMonth);
                     int day  = c.get(Calendar.DAY_OF_WEEK);
                     selectDate = new Date(year-1900,month,dayOfMonth);
-                    cd = df.format(selectDate);
-                    CheckAppointment(cd, days[day-1]);
+                    CheckAppointment(df.format(selectDate), days[day-1]);
                 }
             }
         });
@@ -209,6 +208,16 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         for(DataSnapshot i : snapshot.getChildren()){
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
+                                int year = Integer.parseInt(p.getDate().substring(6,10))
+                                        , month = Integer.parseInt(p.getDate().substring(3,5))
+                                        , day = Integer.parseInt(p.getDate().substring(0,2));
+
+                                if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
+                                        ||(Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month)){
+                                    i.getRef().removeValue();
+                                }
+
+
                                 if(p.getDate().equals(cd)){
                                     double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
                                             Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;

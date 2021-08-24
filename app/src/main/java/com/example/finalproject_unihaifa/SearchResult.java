@@ -52,11 +52,6 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         myRef = database.getReference("User");
         business = (ListView) findViewById(R.id.business);
 
-        /*adapter = new SimpleAdapter(this, list, R.layout.multi_line,
-                new String[] {"line1","line2"}, new int[] {R.id.line_a,R.id.line_b});
-        business.setAdapter(adapter);
-        adapter.notifyDataSetChanged();*/
-
         adapter = new SearchResultListAdapter(this, businessUsernames);
         business.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -88,16 +83,14 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                         if(ds.exists()){
                             BusinessUser user = ds.getValue(BusinessUser.class);
                             if(user.getType().equals("Business Owner")){
-                                //item = new HashMap<String,String>();
-                                //item.put("line1", user.getName());
-                                //item.put("line2", user.getDescription());
-                                //list.add(item);
-                                //users.add(user);
                                 businessUsernames.add(user.getName());
                                 adapter.notifyDataSetChanged();
                             }
                         }
                     }
+                    if(!snapshot.exists())
+                        Toast.makeText(getApplicationContext(), "There is no business owner with that name", Toast.LENGTH_LONG).show();
+
                 }
 
                 @Override

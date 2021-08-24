@@ -1,5 +1,6 @@
 package com.example.finalproject_unihaifa;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +33,9 @@ public class SearchResultListAdapter extends ArrayAdapter {
 
     private final Activity context;
     private final ArrayList<String> businessUsername;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRequests = database.getReference("Customer Requests");
 
     public SearchResultListAdapter(Activity context, ArrayList usernames) {
 
@@ -127,8 +132,33 @@ public class SearchResultListAdapter extends ArrayAdapter {
                                         }
                                     });
 
+                                    ((Button)dialog.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Query check = myRequests.child(businessUsername.get(position)).child(currentUser);
+                                            check.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        dialog.dismiss();
+                                                        Toast.makeText(context.getApplicationContext(),"You have send customer request", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    else {
+                                                        myRequests.child(businessUsername.get(position)).child(currentUser).setValue(currentUser);
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+
                                     dialog.show();
-                                    dialog.getWindow().setLayout(1000,600);
+                                    dialog.getWindow().setLayout(1000,700);
                                 }
                             }
 

@@ -28,7 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
     ArrayList<Appointment> app = new ArrayList<Appointment>();;
     Map<String, String > item;
     static User user;
+    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +83,15 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                             for(DataSnapshot i : snapshot.getChildren()){
                                 if(i.exists()){
                                     Appointment p = i.getValue(Appointment.class);
+                                    int year = Integer.parseInt(p.getDate().substring(6,10))
+                                            , month = Integer.parseInt(p.getDate().substring(3,5))
+                                            , day = Integer.parseInt(p.getDate().substring(0,2));
+                                    String cd = df.format(Calendar.getInstance().getTime());
+
+                                    if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
+                                            ||(Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month))
+                                        i.getRef().removeValue();
+
                                     item = new HashMap<String,String>();
                                     item.put("line1", p.getType() + " appointment at " + p.getBusinessN());
                                     item.put("line2", "Time : " + p.getStartTime().toString().subSequence(0,5) + ", Date : " + p.getDate());
@@ -141,6 +153,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                         break;
                     case R.id.bu_list:
                         //TODO
+                        break;
                     case R.id.log_out1:
                         Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
                         Dialog dialog = new Dialog(CustomerHomePage.this);
@@ -150,7 +163,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                         ((Button) dialog.findViewById(R.id.logout_dialog)).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                FirebaseAuth.getInstance().signOut();
+                                mAuth.signOut();
                                 dialog.dismiss();
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }
