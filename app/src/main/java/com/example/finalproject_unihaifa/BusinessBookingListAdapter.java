@@ -31,11 +31,11 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
     private final Activity context;
     private final ArrayList<String> availableApps;
 
-    public BusinessBookingListAdapter(Activity context, ArrayList usernames) {
+    public BusinessBookingListAdapter(Activity context, ArrayList options) {
 
-        super(context, R.layout.list_search_result, usernames);
+        super(context, R.layout.list_search_result, options);
         this.context = context;
-        this.availableApps = usernames;
+        this.availableApps = options;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
@@ -116,6 +116,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                                 DatabaseReference myApp = FirebaseDatabase.getInstance().getReference("Appointments");
                                                                 myApp.child(bu).child(str).setValue(appointment);
                                                                 myApp.child(appointment.getCustomerN()).child(str).setValue(appointment);
+                                                                availableApps.remove(s);
                                                                 notifyDataSetChanged();
                                                                 dialog.dismiss();
                                                             }
@@ -153,6 +154,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                     String str = appointment.getStartTime() + " - " + appointment.getEndTime() + ", " + appointment.getDate();
                                                     DatabaseReference myApp = FirebaseDatabase.getInstance().getReference("Appointments");
                                                     myApp.child(bu).child(str).setValue(appointment);
+                                                    availableApps.remove(s);
                                                     notifyDataSetChanged();
                                                     dialog.dismiss();
                                                 }
