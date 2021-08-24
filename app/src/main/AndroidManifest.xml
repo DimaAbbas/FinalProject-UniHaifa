@@ -29,6 +29,7 @@
         <activity android:name=".SearchResult"/>
         <activity android:name=".Booking"/>
         <activity android:name=".FeaturedCustomers"/>
+        <activity android:name=".BusinessBooking"/>
     </application>
 
 </manifest>

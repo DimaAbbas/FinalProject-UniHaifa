@@ -44,7 +44,8 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
             showPopup(view);
         }
         else if (view.getId() == R.id.B_new_appointment){
-            Toast.makeText(getApplicationContext(), "New Appointment button clicked", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "New Appointment button clicked", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(), BusinessBooking.class));
         }
     }
 

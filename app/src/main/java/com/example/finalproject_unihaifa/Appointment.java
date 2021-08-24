@@ -8,6 +8,7 @@ public class Appointment {
     private String startTime, endTime;
     private String customerN, businessN, type;
     private String date;
+    private String customerPhone;
 
     public Appointment(){
 
@@ -20,6 +21,16 @@ public class Appointment {
         this.businessN = businessN;
         this.type = type;
         this.date = date;
+    }
+
+    public Appointment(String startTime, String endTime, String customerN, String businessN, String type, String date, String customerPhone){
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.customerN = customerN;
+        this.businessN = businessN;
+        this.type = type;
+        this.date = date;
+        this.customerPhone = customerPhone;
     }
 
     public String getType() {
@@ -44,5 +55,9 @@ public class Appointment {
 
     public String getCustomerN() {
         return customerN;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
     }
 }
