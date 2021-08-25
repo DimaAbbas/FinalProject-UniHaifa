@@ -201,7 +201,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                 Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
             }
             else {
-                Query query = myApp.child(bu);
+                Query query = myApp.orderByChild("businessN").equalTo(bu);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -212,10 +212,20 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                         , month = Integer.parseInt(p.getDate().substring(3,5))
                                         , day = Integer.parseInt(p.getDate().substring(0,2));
 
-                                if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
+                                String todayDate = df.format(Calendar.getInstance().getTime());
+                                int year1 = Integer.parseInt(todayDate.substring(6,10));
+                                int month1 = Integer.parseInt(todayDate.substring(3,5));
+                                int day1 = Integer.parseInt(todayDate.substring(0,2));
+                                if (year1 > year)
+                                    i.getRef().removeValue();
+                                if(year1 == year && month1 > month)
+                                    i.getRef().removeValue();
+                                if (year1 == year && month1 == month && day1 > day)
+                                    i.getRef().removeValue();
+                                /*if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
                                         ||(Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month)){
                                     i.getRef().removeValue();
-                                }
+                                }*/
 
 
                                 if(p.getDate().equals(cd)){
@@ -293,9 +303,13 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
             options.remove(s);
             adapter.notifyDataSetChanged();
-            String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
-            myApp.child(bu).child(str).setValue(app);
-            myApp.child(app.getCustomerN()).child(str).setValue(app);
+            //String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
+            String str = app.getDate() + " " + app.getStartTime() + "-" + app.getEndTime()
+                    + " " + app.getBusinessN() + " " + app.getType()
+                    + " " + app.getCustomerN();
+            myApp.child(str).setValue(app);
+            //myApp.child(bu).child(str).setValue(app);
+            //myApp.child(app.getCustomerN()).child(str).setValue(app);
         }
     }
 
