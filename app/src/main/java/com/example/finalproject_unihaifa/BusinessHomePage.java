@@ -67,6 +67,9 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         //Toast.makeText(getApplicationContext(), "appointments settings clicked", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                         break;
+                    case R.id.B_requests:
+                        startActivity(new Intent(getApplicationContext(), CustomerRequests.class));
+                        break;
                     case R.id.customers_list:
                         //Toast.makeText(getApplicationContext(), "customer list clicked", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), FeaturedCustomers.class));

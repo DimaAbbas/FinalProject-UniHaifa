@@ -8,6 +8,9 @@
         android:id="@+id/B_Appointments"
         android:title="Appointments Settings" />
     <item
+        android:id="@+id/B_requests"
+        android:title="Customer Requests" />
+    <item
         android:id="@+id/customers_list"
         android:title="Featured Customers" />
     <item

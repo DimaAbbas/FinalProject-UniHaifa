@@ -5,9 +5,6 @@
         android:id="@+id/C_account_info"
         android:title="Your Account" />
     <item
-        android:id="@+id/bu_list"
-        android:title="Business List" />
-    <item
         android:id="@+id/log_out1"
         android:title="Log out" />
 </menu>

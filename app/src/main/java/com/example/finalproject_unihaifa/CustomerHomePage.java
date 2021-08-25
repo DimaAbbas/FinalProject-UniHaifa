@@ -88,8 +88,13 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                                             , day = Integer.parseInt(p.getDate().substring(0,2));
                                     String cd = df.format(Calendar.getInstance().getTime());
 
-                                    if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
-                                            ||(Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month))
+                                    if(Integer.parseInt(cd.substring(6,10)) > year)
+                                        i.getRef().removeValue();
+
+                                    else if(Integer.parseInt(cd.substring(3,5)) > month && Integer.parseInt(cd.substring(6,10)) == year)
+                                        i.getRef().removeValue();
+
+                                    else if((Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month && Integer.parseInt(cd.substring(6,10)) == year))
                                         i.getRef().removeValue();
 
                                     item = new HashMap<String,String>();
@@ -151,9 +156,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                         //Toast.makeText(getApplicationContext(), "Your account clicked", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), AccountInfo.class));
                         break;
-                    case R.id.bu_list:
-                        //TODO
-                        break;
+
                     case R.id.log_out1:
                         Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
                         Dialog dialog = new Dialog(CustomerHomePage.this);

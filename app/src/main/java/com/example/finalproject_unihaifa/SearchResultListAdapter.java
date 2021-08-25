@@ -109,7 +109,7 @@ public class SearchResultListAdapter extends ArrayAdapter {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String currentUser = snapshot.getValue(User.class).getName();
                         ref2.child(businessUsername.get(position)).child(currentUser)
-                                .addValueEventListener(new ValueEventListener() {
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists()) {
@@ -118,8 +118,8 @@ public class SearchResultListAdapter extends ArrayAdapter {
                                     b.putString("businessUser", businessUsername.get(position));
                                     intent.putExtras(b);
                                     context.startActivity(intent);
-
-                                } else {
+                                }
+                                else {
                                     Dialog dialog = new Dialog(context);
                                     dialog.setContentView(R.layout.dialog_contact_business);
                                     dialog.setTitle("contact business");
@@ -136,7 +136,7 @@ public class SearchResultListAdapter extends ArrayAdapter {
                                         @Override
                                         public void onClick(View v) {
                                             Query check = myRequests.child(businessUsername.get(position)).child(currentUser);
-                                            check.addValueEventListener(new ValueEventListener() {
+                                            check.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){

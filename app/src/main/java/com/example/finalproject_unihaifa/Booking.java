@@ -115,8 +115,13 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                 booking.clear();
                 adapter.notifyDataSetChanged();
 
-                if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > (month+1)
-                        ||(Integer.parseInt(cd.substring(0,2)) > dayOfMonth && Integer.parseInt(cd.substring(3,5)) == (month+1)))
+                if(Integer.parseInt(cd.substring(6,10)) > year)
+                    Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
+
+                else if(Integer.parseInt(cd.substring(3,5)) > (month+1) && Integer.parseInt(cd.substring(6,10)) == year)
+                    Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
+
+                else if((Integer.parseInt(cd.substring(0,2)) > dayOfMonth && Integer.parseInt(cd.substring(3,5)) == (month+1) && Integer.parseInt(cd.substring(6,10)) == year))
                     Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
 
                 else {
@@ -212,10 +217,15 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                         , month = Integer.parseInt(p.getDate().substring(3,5))
                                         , day = Integer.parseInt(p.getDate().substring(0,2));
 
-                                if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > month
-                                        ||(Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month)){
+                                if(Integer.parseInt(cd.substring(6,10)) > year)
                                     i.getRef().removeValue();
-                                }
+
+                                else if(Integer.parseInt(cd.substring(3,5)) > month && Integer.parseInt(cd.substring(6,10)) == year)
+                                    i.getRef().removeValue();
+
+                                else if((Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month && Integer.parseInt(cd.substring(6,10)) == year))
+                                    i.getRef().removeValue();
+
 
 
                                 if(p.getDate().equals(cd)){
