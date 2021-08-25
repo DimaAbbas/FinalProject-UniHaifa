@@ -164,6 +164,7 @@ public class BusinessBooking extends AppCompatActivity {
     @SuppressLint("NewApi")
     public void CheckAppointment(String cd, String day){
 
+
         myref.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -186,7 +187,7 @@ public class BusinessBooking extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    Query query = myApp.child(current);
+                                    Query query = myApp.orderByChild("businessN").equalTo(current);
                                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
