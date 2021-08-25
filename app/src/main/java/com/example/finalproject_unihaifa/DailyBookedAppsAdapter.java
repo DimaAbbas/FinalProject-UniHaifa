@@ -69,30 +69,15 @@ public class DailyBookedAppsAdapter extends ArrayAdapter {
                 dialog.setContentView(R.layout.dialog_delete_appointment);
                 dialog.setTitle("Delete appointment");
 
-                /*((Button) dialog.findViewById(R.id.delete_appointment)).setOnClickListener(new View.OnClickListener() {
+                ((Button) dialog.findViewById(R.id.delete_appointment)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User");
-                        DatabaseReference userRef1 = FirebaseDatabase.getInstance().getReference("User");
                         DatabaseReference appRef = FirebaseDatabase.getInstance().getReference("Appointments");
-
-                        userRef.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String business = snapshot.getValue(User.class).getName();
-                                appRef.child(business).child(fullAppName.get(position)).removeValue();
-                                notifyDataSetChanged();
-                                dialog.dismiss();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        appRef.child(fullAppName.get(position)).removeValue();
+                        notifyDataSetChanged();
+                        dialog.dismiss();
                     }
-                });*/
+                });
 
                 ((Button) dialog.findViewById(R.id.cancel_delete_appointment)).setOnClickListener(new View.OnClickListener() {
                     @Override

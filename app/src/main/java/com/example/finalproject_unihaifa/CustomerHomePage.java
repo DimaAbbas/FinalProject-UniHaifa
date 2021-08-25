@@ -75,8 +75,8 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                     User user_ = snapshot.getValue(User.class);
                     setUser(user_);
                     username.setText(user_.getName() + " ,");
-                    myApp = myApp.child(user_.getName());
-                    myApp.addValueEventListener(new ValueEventListener() {
+                    Query query1 = myApp.orderByChild("customerN").equalTo(user_.getName());
+                    query1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();

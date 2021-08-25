@@ -49,8 +49,9 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
     CalendarView calendarView;
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-    String currentDate;
+    String currentDate, selectedDate;
     int currentYear, currentMonth, currentDay;
+    int selectedYear, selectedMonth, selectedDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,9 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                 userNameView.setText(userName);
 
                 filterAppointments(userName);
+                selectedYear = currentYear;
+                selectedMonth = currentMonth;
+                selectedDay = currentDay;
                 getBookedAppointments(userName);
             }
 
@@ -94,10 +98,10 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                currentDate = df.format(new Date(year-1900, month, dayOfMonth));
-                currentYear = Integer.parseInt(currentDate.substring(6,10));
-                currentMonth = Integer.parseInt(currentDate.substring(3,5));
-                currentDay = Integer.parseInt(currentDate.substring(0,2));
+                selectedDate = df.format(new Date(year-1900, month, dayOfMonth));
+                selectedYear = Integer.parseInt(selectedDate.substring(6,10));
+                selectedMonth = Integer.parseInt(selectedDate.substring(3,5));
+                selectedDay = Integer.parseInt(selectedDate.substring(0,2));
 
                 userRef.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -194,7 +198,38 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     }
 
     private void getBookedAppointments(String userName) {
-        appRef.child(userName).addValueEventListener(new ValueEventListener() {
+        appRef.orderByChild("businessN").equalTo(userName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    fullName.clear(); appointments.clear(); customers.clear();
+                    phones.clear(); hours.clear(); minutes.clear();
+                    adapter.notifyDataSetChanged();
+                    for (DataSnapshot ds: snapshot.getChildren()) {
+                        Appointment app = ds.getValue(Appointment.class);
+                        int year = Integer.parseInt(app.getDate().substring(6,10));
+                        int month = Integer.parseInt(app.getDate().substring(3,5));
+                        int day = Integer.parseInt(app.getDate().substring(0,2));
+
+                        if (year == selectedYear && month == selectedMonth && day == selectedDay){
+                            fullName.add(ds.getKey());
+                            appointments.add(app.getType());
+                            customers.add(app.getCustomerN());
+                            phones.add("0537756048");
+                            hours.add(app.getStartTime().substring(0,2));
+                            minutes.add(app.getStartTime().substring(3,5));
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        /*appRef.child(userName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -225,7 +260,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void filterAppointments(String userName) {
