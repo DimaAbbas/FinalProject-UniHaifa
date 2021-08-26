@@ -90,7 +90,7 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                 }
 
             case R.id.reset_password:
-                //resetPassword();
+                resetPassword();
         }
     }
 
