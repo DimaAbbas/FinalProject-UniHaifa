@@ -41,10 +41,10 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef, myApp;
-    List list = new ArrayList<>();
+    ArrayList list = new ArrayList<>();
     ArrayList<Appointment> app = new ArrayList<Appointment>();;
     Map<String, String > item;
-    static User user;
+    static User user = new User();
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     @Override
@@ -58,8 +58,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
         myApp = database.getReference("Appointments");
 
         apps = (ListView) findViewById(R.id.Appointments);
-        SimpleAdapter adapter = new SimpleAdapter(this, list, R.layout.multi_line,
-                new String[] {"line1","line2"}, new int[] {R.id.line_a,R.id.line_b});
+        CustomerBookedAppsListAdapter adapter = new CustomerBookedAppsListAdapter(this, list, user.getName());
         apps.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -99,7 +98,8 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
 
                                     item = new HashMap<String,String>();
                                     item.put("line1", p.getType() + " appointment at " + p.getBusinessN());
-                                    item.put("line2", "Time : " + p.getStartTime().toString().subSequence(0,5) + ", Date : " + p.getDate());
+                                    item.put("line2", "Time : " + p.getStartTime().subSequence(0,5)
+                                            + "-" + p.getEndTime().subSequence(0,5) + ", Date : " + p.getDate());
                                     list.add(item);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -126,7 +126,11 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO;
+        //TODO
+        System.out.println("Yes");
+        if(view.getId() == R.id.delete_app){
+            System.out.println("Yes delete button");
+        }
     }
 
     @Override
