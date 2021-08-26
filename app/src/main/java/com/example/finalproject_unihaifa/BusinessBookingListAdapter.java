@@ -72,10 +72,12 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                             nameTxt.setVisibility(View.INVISIBLE);
                             phoneTxt.setVisibility(View.INVISIBLE);
                             usernameTxt.setVisibility(View.VISIBLE);
+                            mySwitch.setText("Yes");
                         } else {
                             nameTxt.setVisibility(View.VISIBLE);
                             phoneTxt.setVisibility(View.VISIBLE);
                             usernameTxt.setVisibility(View.INVISIBLE);
+                            mySwitch.setText("No");
 
                         }
                     }

@@ -9,28 +9,30 @@
         android:id="@+id/business_booking_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="40dp"
-        android:text="Switch"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="5dp"
+        android:text="no"
+        android:textOn="no"
+        android:theme="@style/editSwitchTheme"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
     <TextView
         android:id="@+id/textView26"
         android:layout_width="251dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
         android:text="does your customer has an account on our app?"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/business_booking_switch"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="customer's name"
         android:inputType="textPersonName"
@@ -56,6 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/buttons"
         android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView26"
