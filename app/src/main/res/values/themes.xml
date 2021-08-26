@@ -21,4 +21,8 @@
     <style name="chipGroupDaysTheme">
         <item name="colorControlActivated">@color/buttons</item>
     </style>
+    
+    <style name="calendarViewTheme">
+        <item name="colorAccent">@color/buttons</item>
+    </style>
 </resources>
