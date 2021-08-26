@@ -110,6 +110,15 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                                 usernameTxt.requestFocus();
                                                                 return;
                                                             } else {
+                                                                for (DataSnapshot ds: snapshot.getChildren()) {
+                                                                    if ((ds.getValue(User.class).getType()).equals("Business Owner")) {
+                                                                        usernameTxt.setError("this username is a Business Owner user, " +
+                                                                                "you can't book them an appointment");
+                                                                        usernameTxt.requestFocus();
+                                                                        return;
+                                                                    }
+
+                                                                }
                                                                 Appointment appointment = new Appointment(t1.toString().substring(0,5),
                                                                         t2.toString().substring(0,5), customerUsername, bu,
                                                                         BusinessBooking.getSelectedType(), BusinessBooking.getDate());
