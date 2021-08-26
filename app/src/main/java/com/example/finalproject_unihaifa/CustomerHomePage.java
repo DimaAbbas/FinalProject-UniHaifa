@@ -41,11 +41,16 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef, myApp;
-    ArrayList list = new ArrayList<>();
     ArrayList<Appointment> app = new ArrayList<Appointment>();;
     Map<String, String > item;
     static User user = new User();
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+
+    ArrayList<String> firstLine = new ArrayList<>();
+    ArrayList<String> secondLine = new ArrayList<>();
+    ArrayList<String> fullName = new ArrayList<>();
+    CustomerBookedAppsListAdapter adapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
         myApp = database.getReference("Appointments");
 
         apps = (ListView) findViewById(R.id.Appointments);
-        CustomerBookedAppsListAdapter adapter = new CustomerBookedAppsListAdapter(this, list, user.getName());
+        adapter = new CustomerBookedAppsListAdapter(this, firstLine, secondLine, fullName);
         apps.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -78,7 +83,10 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                     query1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            list.clear();
+                            //list.clear();
+                            firstLine.clear();
+                            secondLine.clear();
+                            fullName.clear();
                             for(DataSnapshot i : snapshot.getChildren()){
                                 if(i.exists()){
                                     Appointment p = i.getValue(Appointment.class);
@@ -96,11 +104,15 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
                                     else if((Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month && Integer.parseInt(cd.substring(6,10)) == year))
                                         i.getRef().removeValue();
 
-                                    item = new HashMap<String,String>();
+                                    /*item = new HashMap<String,String>();
                                     item.put("line1", p.getType() + " appointment at " + p.getBusinessN());
                                     item.put("line2", "Time : " + p.getStartTime().subSequence(0,5)
+                                            + "-" + p.getEndTime().subSequence(0,5) + ", Date : " + p.getDate());*/
+                                    //list.add(item);
+                                    firstLine.add(p.getType() + " appointment at " + p.getBusinessN());
+                                    secondLine.add("Time : " + p.getStartTime().subSequence(0,5)
                                             + "-" + p.getEndTime().subSequence(0,5) + ", Date : " + p.getDate());
-                                    list.add(item);
+                                    fullName.add(i.getKey());
                                     adapter.notifyDataSetChanged();
                                 }
                             }
