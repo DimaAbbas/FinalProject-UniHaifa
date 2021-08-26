@@ -103,62 +103,78 @@ public class SearchResultListAdapter extends ArrayAdapter {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("User");
                 DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("Featured Customer");
+                DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference("Appointment Type");
 
                 ref1.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String currentUser = snapshot.getValue(User.class).getName();
-                        ref2.child(businessUsername.get(position)).child(currentUser)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                        ref3.child(usernameTxt.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    Intent intent = new Intent(context, Booking.class);
-                                    Bundle b = new Bundle();
-                                    b.putString("businessUser", businessUsername.get(position));
-                                    intent.putExtras(b);
-                                    context.startActivity(intent);
+                                System.out.println(snapshot);
+                                if(snapshot.getChildrenCount() > 0){
+                                    ref2.child(businessUsername.get(position)).child(currentUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                Intent intent = new Intent(context, Booking.class);
+                                                Bundle b = new Bundle();
+                                                b.putString("businessUser", businessUsername.get(position));
+                                                intent.putExtras(b);
+                                                context.startActivity(intent);
+                                            }
+                                            else {
+                                                        Dialog dialog = new Dialog(context);
+                                                        dialog.setContentView(R.layout.dialog_contact_business);
+                                                        dialog.setTitle("contact business");
+
+                                                        ((ImageButton)dialog.findViewById(R.id.close_contact_business_dialog))
+                                                                .setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View v) {
+                                                                        dialog.dismiss();
+                                                                    }
+                                                                });
+
+                                                        ((Button)dialog.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Query check = myRequests.child(businessUsername.get(position)).child(currentUser);
+                                                                check.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        if(snapshot.exists()){
+                                                                            dialog.dismiss();
+                                                                            Toast.makeText(context.getApplicationContext(),"You have send customer request", Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                        else {
+                                                                            myRequests.child(businessUsername.get(position)).child(currentUser).setValue(currentUser);
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+
+                                                        dialog.show();
+                                                        dialog.getWindow().setLayout(1000,700);
+                                                    }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                                 }
-                                else {
-                                    Dialog dialog = new Dialog(context);
-                                    dialog.setContentView(R.layout.dialog_contact_business);
-                                    dialog.setTitle("contact business");
-
-                                    ((ImageButton)dialog.findViewById(R.id.close_contact_business_dialog))
-                                            .setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    ((Button)dialog.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Query check = myRequests.child(businessUsername.get(position)).child(currentUser);
-                                            check.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if(snapshot.exists()){
-                                                        dialog.dismiss();
-                                                        Toast.makeText(context.getApplicationContext(),"You have send customer request", Toast.LENGTH_LONG).show();
-                                                    }
-                                                    else {
-                                                        myRequests.child(businessUsername.get(position)).child(currentUser).setValue(currentUser);
-                                                        dialog.dismiss();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    dialog.show();
-                                    dialog.getWindow().setLayout(1000,700);
+                                else{
+                                    Toast.makeText(context.getApplicationContext(), "This business owner doesn't have an appointment types", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -167,6 +183,7 @@ public class SearchResultListAdapter extends ArrayAdapter {
 
                             }
                         });
+
                     }
 
                     @Override

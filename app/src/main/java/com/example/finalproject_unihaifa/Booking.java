@@ -206,7 +206,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                 Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
             }
             else {
-                Query query = myApp.child(bu);
+                Query query = myApp.orderByChild("businessN").equalTo(bu);
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -217,15 +217,16 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                         , month = Integer.parseInt(p.getDate().substring(3,5))
                                         , day = Integer.parseInt(p.getDate().substring(0,2));
 
-                                if(Integer.parseInt(cd.substring(6,10)) > year)
+                                String todayDate = df.format(Calendar.getInstance().getTime());
+                                int year1 = Integer.parseInt(todayDate.substring(6,10));
+                                int month1 = Integer.parseInt(todayDate.substring(3,5));
+                                int day1 = Integer.parseInt(todayDate.substring(0,2));
+                                if (year1 > year)
                                     i.getRef().removeValue();
-
-                                else if(Integer.parseInt(cd.substring(3,5)) > month && Integer.parseInt(cd.substring(6,10)) == year)
+                                if(year1 == year && month1 > month)
                                     i.getRef().removeValue();
-
-                                else if((Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month && Integer.parseInt(cd.substring(6,10)) == year))
+                                if (year1 == year && month1 == month && day1 > day)
                                     i.getRef().removeValue();
-
 
 
                                 if(p.getDate().equals(cd)){
@@ -238,7 +239,9 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                 }
                             }
                         }
-                        double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
+
+                        UpdateOptionsList();
+                        /*double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
                         double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                         double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
 
@@ -253,7 +256,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                             if(!booking.isEmpty()){
                                 for(double k : booking.keySet()){
                                     v = booking.get(k);
-                                    if((j <= k && k < (j+d)) || (j < v && v <= (j+d))){
+                                    if((j <= k && k < (j+d)) || (j < v && v <= (j+d)) || (k <= j && (j+d) <= v)){
                                         if(options.contains(str)) {
                                             options.remove(str);
                                             adapter.notifyDataSetChanged();
@@ -270,7 +273,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                 setOptions(str);
                                 adapter.notifyDataSetChanged();
                             }
-                        }
+                        }*/
                     }
 
                     @Override
@@ -303,9 +306,16 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
             options.remove(s);
             adapter.notifyDataSetChanged();
-            String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
-            myApp.child(bu).child(str).setValue(app);
-            myApp.child(app.getCustomerN()).child(str).setValue(app);
+            //String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
+            String str = app.getDate() + " " + app.getStartTime() + "-" + app.getEndTime()
+                    + " " + app.getBusinessN() + " " + app.getType()
+                    + " " + app.getCustomerN();
+            myApp.child(str).setValue(app);
+            double x,x1;
+            x = Double.parseDouble(s.substring(5,7)) + Double.parseDouble(s.substring(8,10))/60.0;
+            x1 = Double.parseDouble(s.substring(14,16)) + Double.parseDouble(s.substring(17,19))/60.0;
+            booking.put(x,x1);
+            UpdateOptionsList();
         }
     }
 
@@ -319,5 +329,41 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
 
     public void setOptions(String s){
         options.add(s);
+    }
+
+    public void UpdateOptionsList(){
+        double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
+        double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
+        double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
+
+        for(double i = s; i <= e; i++){
+            double j = i, v;
+            int h = (int) j; int m = (int) ((j%1) * 60.0);
+            int h1 = (int) (j+d); int m1 = (int) (((j+d)%1)*60.0);
+            Time t1 = new Time(h,m,0);
+            Time t2 = new Time(h1,m1,0);
+            String str = "from " + t1.toString().subSequence(0,5) +
+                    " to " + t2.toString().subSequence(0,5);
+            if(!booking.isEmpty()){
+                for(double k : booking.keySet()){
+                    v = booking.get(k);
+                    if((j <= k && k < (j+d)) || (j < v && v <= (j+d)) || (k <= j && (j+d) <= v)){
+                        if(options.contains(str)) {
+                            options.remove(str);
+                            adapter.notifyDataSetChanged();
+                        }
+                        break;
+                    }
+                    else if(!options.contains(str)) {
+                        setOptions(str);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+            else {
+                setOptions(str);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

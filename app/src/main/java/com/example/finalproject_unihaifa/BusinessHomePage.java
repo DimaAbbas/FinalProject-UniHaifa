@@ -32,7 +32,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
-    private DatabaseReference userRef, appRef;
+    private DatabaseReference userRef, appRef, myApp;
 
     String userName;
     TextView userNameView;
@@ -62,6 +62,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("User");
         appRef = database.getReference("Appointments");
+        myApp = database.getReference("Appointment Type");
 
         dailyList = (ListView) findViewById(R.id.daily_booked_apps_list);
         adapter = new DailyBookedAppsAdapter(this, fullName, appointments, customers, phones, hours, minutes);
@@ -131,7 +132,32 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
         }
         else if (view.getId() == R.id.B_new_appointment){
             //Toast.makeText(getApplicationContext(), "New Appointment button clicked", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(getApplicationContext(), BusinessBooking.class));
+            userRef.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    userName = snapshot.getValue(User.class).getName();
+                    myApp.child(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.getChildrenCount() != 0)
+                                startActivity(new Intent(getApplicationContext(), BusinessBooking.class));
+                            else
+                                Toast.makeText(getApplicationContext(), "This business owner doesn't have an appointment types", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 

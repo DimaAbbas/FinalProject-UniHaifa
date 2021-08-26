@@ -219,7 +219,7 @@ public class BusinessBooking extends AppCompatActivity {
                                                 if(!booking.isEmpty()){
                                                     for(double k : booking.keySet()){
                                                         v = booking.get(k);
-                                                        if((j <= k && k < (j+d)) || (j < v && v <= (j+d))){
+                                                        if((j <= k && k < (j+d)) || (j < v && v <= (j+d)) || (k <= j && (j+d) <= v)){
                                                             if(options.contains(str)) {
                                                                 options.remove(str);
                                                                 adapter1.notifyDataSetChanged();
