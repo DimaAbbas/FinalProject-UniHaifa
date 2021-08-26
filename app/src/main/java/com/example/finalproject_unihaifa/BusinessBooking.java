@@ -188,7 +188,7 @@ public class BusinessBooking extends AppCompatActivity {
                                 }
                                 else {
                                     Query query = myApp.orderByChild("businessN").equalTo(current);
-                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    query.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             for(DataSnapshot i : snapshot.getChildren()){

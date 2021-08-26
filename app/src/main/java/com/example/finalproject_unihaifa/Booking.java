@@ -207,7 +207,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             }
             else {
                 Query query = myApp.orderByChild("businessN").equalTo(bu);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot i : snapshot.getChildren()){
@@ -239,9 +239,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                 }
                             }
                         }
-
-                        UpdateOptionsList();
-                        /*double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
+                        double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
                         double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                         double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
 
@@ -273,7 +271,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                 setOptions(str);
                                 adapter.notifyDataSetChanged();
                             }
-                        }*/
+                        }
                     }
 
                     @Override
@@ -311,11 +309,6 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                     + " " + app.getBusinessN() + " " + app.getType()
                     + " " + app.getCustomerN();
             myApp.child(str).setValue(app);
-            double x,x1;
-            x = Double.parseDouble(s.substring(5,7)) + Double.parseDouble(s.substring(8,10))/60.0;
-            x1 = Double.parseDouble(s.substring(14,16)) + Double.parseDouble(s.substring(17,19))/60.0;
-            booking.put(x,x1);
-            UpdateOptionsList();
         }
     }
 
@@ -329,41 +322,5 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
 
     public void setOptions(String s){
         options.add(s);
-    }
-
-    public void UpdateOptionsList(){
-        double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
-        double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
-        double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
-
-        for(double i = s; i <= e; i++){
-            double j = i, v;
-            int h = (int) j; int m = (int) ((j%1) * 60.0);
-            int h1 = (int) (j+d); int m1 = (int) (((j+d)%1)*60.0);
-            Time t1 = new Time(h,m,0);
-            Time t2 = new Time(h1,m1,0);
-            String str = "from " + t1.toString().subSequence(0,5) +
-                    " to " + t2.toString().subSequence(0,5);
-            if(!booking.isEmpty()){
-                for(double k : booking.keySet()){
-                    v = booking.get(k);
-                    if((j <= k && k < (j+d)) || (j < v && v <= (j+d)) || (k <= j && (j+d) <= v)){
-                        if(options.contains(str)) {
-                            options.remove(str);
-                            adapter.notifyDataSetChanged();
-                        }
-                        break;
-                    }
-                    else if(!options.contains(str)) {
-                        setOptions(str);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-            else {
-                setOptions(str);
-                adapter.notifyDataSetChanged();
-            }
-        }
     }
 }

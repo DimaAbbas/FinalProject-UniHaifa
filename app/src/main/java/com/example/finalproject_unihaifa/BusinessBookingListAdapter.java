@@ -122,7 +122,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                                 myApp.child(str).setValue(appointment);
                                                                 //myApp.child(bu).child(str).setValue(appointment);
                                                                 //myApp.child(appointment.getCustomerN()).child(str).setValue(appointment);
-                                                                availableApps.remove(s);
+                                                                //availableApps.remove(s);
                                                                 notifyDataSetChanged();
                                                                 dialog.dismiss();
                                                             }
@@ -164,7 +164,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                     DatabaseReference myApp = FirebaseDatabase.getInstance().getReference("Appointments");
                                                     myApp.child(str).setValue(appointment);
                                                     //myApp.child(bu).child(str).setValue(appointment);
-                                                    availableApps.remove(s);
+                                                    //availableApps.remove(s);
                                                     notifyDataSetChanged();
                                                     dialog.dismiss();
                                                 }
