@@ -309,6 +309,9 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                     + " " + app.getBusinessN() + " " + app.getType()
                     + " " + app.getCustomerN();
             myApp.child(str).setValue(app);
+
+
+
         }
     }
 
