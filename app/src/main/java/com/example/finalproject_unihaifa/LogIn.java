@@ -58,6 +58,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 break;
             case R.id.txtForget:
+                resetPassword();
                 break;
         }
     }
@@ -119,6 +120,35 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     }
     public static void setUser(User u){
         user=new User(u);
+    }
+
+    private void resetPassword() {
+
+        Email = email.getText().toString().trim();
+        if (Email.isEmpty()) {
+            email.setError("Enter your email");
+            email.requestFocus();
+            return;
+        }
+
+        myRef.orderByChild("email").equalTo(Email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    email.setError("this email is not registered at our app");
+                    email.requestFocus();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        mAuth.sendPasswordResetEmail(Email);
+        Toast.makeText(getApplicationContext(), "reset email sent", Toast.LENGTH_SHORT).show();
     }
 }
 
