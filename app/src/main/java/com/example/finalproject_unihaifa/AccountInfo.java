@@ -24,7 +24,7 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
 
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    TextView username_txt, accountType_txt, email_txt, phone_txt, pass_txt;
+    TextView username_txt, accountType_txt, email_txt, phone_txt;
     String email, phone;
     EditText edit_phone, edit_email;
 
@@ -40,7 +40,6 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
         accountType_txt = (TextView) findViewById(R.id.account_type_info);
         email_txt = (TextView) findViewById(R.id.email_info);
         phone_txt = (TextView) findViewById(R.id.phone_info);
-        pass_txt = (TextView) findViewById(R.id.password_info);
         edit_email = (EditText) findViewById(R.id.edit_email_info);
         edit_phone = (EditText) findViewById(R.id.edit_phone_info);
 
@@ -56,7 +55,6 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                 accountType_txt.setText(snapshot.getValue(User.class).getType());
                 email_txt.setText(snapshot.getValue(User.class).getEmail());
                 phone_txt.setText(snapshot.getValue(User.class).getPhone());
-                pass_txt.setText(snapshot.getValue(User.class).getPassword());
 
                 edit_email.setText(email_txt.getText().toString().trim());
                 edit_phone.setText(phone_txt.getText().toString().trim());
@@ -88,9 +86,10 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                     editAccountInfo();
                     ((Switch)findViewById(R.id.editAccountSwitch)).setText("edit");
                 }
-
+                break;
             case R.id.reset_password:
                 resetPassword();
+                break;
         }
     }
 
@@ -141,7 +140,7 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                 String reset_email = (snapshot.getValue(User.class)).getEmail();
 
                 mAuth.sendPasswordResetEmail(reset_email);
-                Toast.makeText(getApplicationContext(), "reset email sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "A reset email was sent to your email address", Toast.LENGTH_SHORT).show();
             }
 
             @Override

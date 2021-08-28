@@ -25,4 +25,8 @@
     <style name="calendarViewTheme">
         <item name="colorAccent">@color/buttons</item>
     </style>
+
+    <style name="EditTextTheme">
+        <item name="colorAccent">@color/buttons</item>
+    </style>
 </resources>

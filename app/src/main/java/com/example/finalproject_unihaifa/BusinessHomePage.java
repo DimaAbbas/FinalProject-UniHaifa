@@ -127,7 +127,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.B_account){
-            Toast.makeText(getApplicationContext(), "Account button clicked", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Account button clicked", Toast.LENGTH_LONG).show();
             showPopup(view);
         }
         else if (view.getId() == R.id.B_new_appointment){
@@ -142,7 +142,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             if(snapshot.getChildrenCount() != 0)
                                 startActivity(new Intent(getApplicationContext(), BusinessBooking.class));
                             else
-                                Toast.makeText(getApplicationContext(), "This business owner doesn't have an appointment types", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "you still didn't created an appointments type, you can't book one now!", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -188,7 +188,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         break;
 
                     case R.id.log_out:{
-                        Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "log out clicked", Toast.LENGTH_SHORT).show();
                         Dialog dialog = new Dialog(BusinessHomePage.this);
                         dialog.setContentView(R.layout.dialog_logout);
                         dialog.setTitle("lou out");
@@ -198,6 +198,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             public void onClick(View v) {
                                 FirebaseAuth.getInstance().signOut();
                                 dialog.dismiss();
+                                finish();
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }
                         });
@@ -241,7 +242,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             fullName.add(ds.getKey());
                             appointments.add(app.getType());
                             customers.add(app.getCustomerN());
-                            phones.add("0537756048");
+                            phones.add(app.getCustomerPhone());
                             hours.add(app.getStartTime().substring(0,2));
                             minutes.add(app.getStartTime().substring(3,5));
                             adapter.notifyDataSetChanged();
