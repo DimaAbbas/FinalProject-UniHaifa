@@ -32,11 +32,24 @@
 
     <ListView
         android:id="@+id/cr_list"
-        android:layout_width="409dp"
-        android:layout_height="673dp"
+        android:layout_width="389dp"
+        android:layout_height="555dp"
         android:layout_marginTop="20dp"
         android:background="@color/background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="your requests:"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cr_toolbar" />
 

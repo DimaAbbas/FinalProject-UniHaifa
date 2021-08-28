@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,8 +43,8 @@ public class CustomerRequestsListAdapter extends ArrayAdapter {
         View rowView = inflater.inflate(R.layout.list_request, null, true);
 
         TextView c_name = (TextView) rowView.findViewById(R.id.cr_name);
-        ImageView accept = (ImageView) rowView.findViewById(R.id.accept);
-        ImageView delete = (ImageView) rowView.findViewById(R.id.delete1);
+        ImageView accept = (ImageButton) rowView.findViewById(R.id.accept);
+        ImageView delete = (ImageButton) rowView.findViewById(R.id.delete1);
 
         mAuth = FirebaseAuth.getInstance();
         myRef = FirebaseDatabase.getInstance().getReference("User");

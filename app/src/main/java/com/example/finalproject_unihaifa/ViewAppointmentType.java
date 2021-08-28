@@ -326,6 +326,7 @@ public class ViewAppointmentType extends AppCompatActivity implements View.OnCli
                     editAppointmentType();
                     Toast.makeText(getApplicationContext(), "NOTE: previously booked appointments will not be affected", Toast.LENGTH_LONG).show();
                 }
+                break;
         }
     }
 }

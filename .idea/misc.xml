@@ -8,6 +8,7 @@
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/acctivity_customers_list.xml" value="0.16304347826086957" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_booking.xml" value="0.16304347826086957" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_home.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_customer_home.xml" value="0.16304347826086957" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_customer_requests.xml" value="0.16304347826086957" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_new_appointment_type.xml" value="0.1796875" />
@@ -37,6 +39,7 @@
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/featured_customers_list.xml" value="0.16304347826086957" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_business_booking.xml" value="0.1515625" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_daily_booked_apps.xml" value="0.16304347826086957" />
+        <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_request.xml" value="0.16304347826086957" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_search_result.xml" value="0.1390625" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/ll.xml" value="0.13229166666666667" />
         <entry key="..\:/Users/suzan kassabry/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/logout_dialog.xml" value="0.1671195652173913" />

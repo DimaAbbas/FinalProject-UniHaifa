@@ -91,11 +91,13 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                                         user = snapshot.getValue(User.class);
                                         userType = user.getType();
                                         System.out.println(userType);
-                                        Toast.makeText(getApplicationContext(), "LogIn Successful", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "Logged In Successfully", Toast.LENGTH_LONG).show();
                                         if (userType.equals("Business Owner")) {
+                                            finish();
                                             startActivity(new Intent(getApplicationContext(), BusinessHomePage.class));
                                         }
                                         else {
+                                            finish();
                                             startActivity(new Intent(getApplicationContext(), CustomerHomePage.class));
                                         }
                                     }

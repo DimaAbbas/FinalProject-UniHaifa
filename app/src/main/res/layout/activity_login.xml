@@ -34,7 +34,6 @@
         android:textSize="34sp"
         android:textStyle="bold|italic"
         android:typeface="normal"
-        app:layout_constraintBottom_toTopOf="@+id/editName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +53,8 @@
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/userpass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:theme="@style/EditTextTheme" />
 
     <EditText
         android:id="@+id/userpass"
@@ -69,7 +69,8 @@
         android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:theme="@style/EditTextTheme" />
 
     <Button
         android:id="@+id/btn_login"

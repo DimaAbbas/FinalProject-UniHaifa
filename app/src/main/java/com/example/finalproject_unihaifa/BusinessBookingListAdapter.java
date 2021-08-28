@@ -117,18 +117,17 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                                         usernameTxt.requestFocus();
                                                                         return;
                                                                     }
-
+                                                                    String phone = ds.getValue(User.class).getPhone();
+                                                                    Appointment appointment = new Appointment(t1.toString().substring(0,5),
+                                                                            t2.toString().substring(0,5), customerUsername, bu,
+                                                                            BusinessBooking.getSelectedType(), BusinessBooking.getDate(), phone);
+                                                                    String str = appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()
+                                                                            + " " + appointment.getBusinessN() + " " + appointment.getType()
+                                                                            + " " + appointment.getCustomerN();
+                                                                    DatabaseReference myApp = FirebaseDatabase.getInstance().getReference("Appointments");
+                                                                    myApp.child(str).setValue(appointment);
                                                                 }
-                                                                Appointment appointment = new Appointment(t1.toString().substring(0,5),
-                                                                        t2.toString().substring(0,5), customerUsername, bu,
-                                                                        BusinessBooking.getSelectedType(), BusinessBooking.getDate());
-
                                                                 //String str = appointment.getStartTime() + " - " + appointment.getEndTime() + ", " + appointment.getDate();
-                                                                String str = appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()
-                                                                        + " " + appointment.getBusinessN() + " " + appointment.getType()
-                                                                        + " " + appointment.getCustomerN();
-                                                                DatabaseReference myApp = FirebaseDatabase.getInstance().getReference("Appointments");
-                                                                myApp.child(str).setValue(appointment);
                                                                 //myApp.child(bu).child(str).setValue(appointment);
                                                                 //myApp.child(appointment.getCustomerN()).child(str).setValue(appointment);
                                                                 //availableApps.remove(s);

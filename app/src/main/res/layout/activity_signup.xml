@@ -36,7 +36,8 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmail"
+        android:theme="@style/EditTextTheme"/>
 
     <EditText
         android:id="@+id/editEmail"
@@ -49,7 +50,8 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/editPhone"
+        android:theme="@style/EditTextTheme" />
 
     <EditText
         android:id="@+id/editPhone"
@@ -63,7 +65,8 @@
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editName" />
+        app:layout_constraintTop_toBottomOf="@+id/editName"
+        android:theme="@style/EditTextTheme" />
 
     <EditText
         android:id="@+id/editName"
@@ -76,7 +79,8 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        android:theme="@style/EditTextTheme" />
 
     <Button
         android:id="@+id/register"
@@ -106,6 +110,7 @@
             android:id="@+id/radioButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/buttons"
             android:minHeight="48dp"
             android:text="Business Owner"
             android:textSize="20sp" />
@@ -114,6 +119,7 @@
             android:id="@+id/radioButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/buttons"
             android:minHeight="48dp"
             android:text="Customer"
             android:textSize="20sp" />
@@ -140,6 +146,7 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        android:theme="@style/EditTextTheme" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

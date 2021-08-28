@@ -139,12 +139,19 @@ public class FeaturedCustomers extends AppCompatActivity implements View.OnClick
                                     if (username.equals(featuredCustomer)) {
                                         featuredCustomerTxt.setError("you can't add your self");
                                         featuredCustomerTxt.requestFocus();
-                                    } else {
-                                        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Featured Customer");
-                                        myRef.child(username).child(featuredCustomer).setValue(featuredCustomer);
-                                        Toast.makeText(getApplicationContext(), "featured customer added successfully", Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
+                                        return;
                                     }
+                                    for (DataSnapshot ds:snapshot.getChildren()) {
+                                        if (ds.getValue(User.class).getType().equals("Business Owner")){
+                                            featuredCustomerTxt.setError("you can't add a business account as a featured customer");
+                                            featuredCustomerTxt.requestFocus();
+                                            return;
+                                        }
+                                    }
+                                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Featured Customer");
+                                    myRef.child(username).child(featuredCustomer).setValue(featuredCustomer);
+                                    Toast.makeText(getApplicationContext(), "featured customer added successfully", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
 
                                 } else {
                                     featuredCustomerTxt.setError("username does not exists");
