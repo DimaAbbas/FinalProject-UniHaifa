@@ -9,7 +9,7 @@
         android:id="@+id/textView23"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:text="You can't book an appointment online at this Business, please contact them personaly"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="31dp"
         android:layout_marginEnd="31dp"
-        android:text="Add it"
+        android:text="send them a customer request"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,15 +52,33 @@
         app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
     <Button
-        android:id="@+id/add"
-        android:layout_width="67dp"
+        android:id="@+id/customer_request_button"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="172dp"
         android:layout_marginTop="9dp"
         android:layout_marginEnd="172dp"
         android:backgroundTint="@color/buttons"
-        android:text="Add"
+        android:text="send request"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView25" />
+
+    <Button
+        android:id="@+id/request_sent_button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="172dp"
+        android:backgroundTint="@color/background"
+        android:clickable="false"
+        android:text="request sent"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView25"
+        app:strokeColor="@color/buttons"
+        app:strokeWidth="3dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
