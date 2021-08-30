@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 public class SignUp extends AppCompatActivity implements View.OnClickListener{
     EditText editName, editEmail, editPhone, editPassword, editDescription;
     RadioGroup rg;
@@ -112,7 +114,47 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             }
         }
 
-        myRef.orderByChild("name").equalTo(Name).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    user = ds.getValue(User.class);
+                    String n = user.getName().toLowerCase();
+                    if(n.equals(Name.toLowerCase())){
+                        System.out.println("Yes");
+                        editName.setError("This username exists, select another one!");
+                        editName.requestFocus();
+                        return;
+                    }
+                }
+                mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            if (UserType.equals("Business Owner")) {
+                                BusinessUser businessUser = new BusinessUser(Name, Phone, Email, Password, UserType, description);
+                                myRef.child(mAuth.getUid()).setValue(businessUser);
+                            } else {
+                                User customer = new User(Name, Phone, Email, Password, UserType);
+                                myRef.child(mAuth.getUid()).setValue(customer);
+                            }
+
+                            startActivity(new Intent(getApplicationContext(), LogIn.class));
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to register! Change the email address", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        /*myRef.orderByChild("name").equalTo(Name).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
@@ -147,7 +189,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         /*mAuth.createUserWithEmailAndPassword(Email, Password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

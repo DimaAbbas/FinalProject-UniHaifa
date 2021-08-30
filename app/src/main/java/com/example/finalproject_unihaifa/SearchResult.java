@@ -75,7 +75,8 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         else {
             //list.clear();
             businessUsernames.clear();
-            Query check = myRef.orderByChild("name").equalTo(search);
+            //Query check = myRef.orderByChild("name").equalTo(search);
+            Query check = myRef.orderByChild("name");
             check.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -83,8 +84,10 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                         if(ds.exists()){
                             BusinessUser user = ds.getValue(BusinessUser.class);
                             if(user.getType().equals("Business Owner")){
-                                businessUsernames.add(user.getName());
-                                adapter.notifyDataSetChanged();
+                                if(user.getName().toLowerCase().contains(search.toLowerCase())){
+                                    businessUsernames.add(user.getName());
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
                         }
                     }
