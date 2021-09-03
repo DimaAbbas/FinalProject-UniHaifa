@@ -9,6 +9,8 @@ public class Appointment {
     private String customerN, businessN, type;
     private String date;
     private String customerPhone;
+    private String businessPhone;
+    private String isCustomer;
 
     public Appointment(){
 
@@ -23,7 +25,7 @@ public class Appointment {
         this.date = date;
     }
 
-    public Appointment(String startTime, String endTime, String customerN, String businessN, String type, String date, String customerPhone){
+    public Appointment(String startTime, String endTime, String customerN, String businessN, String type, String date, String customerPhone, String businessPhone, String isCustomer){
         this.startTime = startTime;
         this.endTime = endTime;
         this.customerN = customerN;
@@ -31,6 +33,8 @@ public class Appointment {
         this.type = type;
         this.date = date;
         this.customerPhone = customerPhone;
+        this.businessPhone = businessPhone;
+        this.isCustomer = isCustomer;
     }
 
     public String getType() {
@@ -59,5 +63,13 @@ public class Appointment {
 
     public String getCustomerPhone() {
         return customerPhone;
+    }
+
+    public String getBusinessPhone() {
+        return businessPhone;
+    }
+
+    public String getIsCustomer(){
+        return isCustomer;
     }
 }

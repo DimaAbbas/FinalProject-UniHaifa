@@ -237,6 +237,7 @@ public class BusinessBooking extends AppCompatActivity {
                                                     adapter1.notifyDataSetChanged();
                                                 }
                                             }
+                                            booking.clear();
                                         }
 
                                         @Override

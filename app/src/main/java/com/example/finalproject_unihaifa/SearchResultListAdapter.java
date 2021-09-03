@@ -62,13 +62,11 @@ public class SearchResultListAdapter extends ArrayAdapter {
 
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("User");
                 Query query = myRef.orderByChild("name").equalTo(businessUsername.get(position));
-                System.out.println(businessUsername.get(position));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot ds:snapshot.getChildren()) {
                             BusinessUser user = ds.getValue(BusinessUser.class);
-                            System.out.println(user.getName());
                             ((TextView)dialog.findViewById(R.id.business_name_dialog)).setText(user.getName());
                             ((TextView)dialog.findViewById(R.id.business_phone_dialog)).setText(user.getPhone());
                             ((TextView)dialog.findViewById(R.id.business_description_dialog)).setText(user.getDescription());

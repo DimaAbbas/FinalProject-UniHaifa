@@ -46,12 +46,11 @@ import java.util.Objects;
 import java.util.logging.SimpleFormatter;
 
 public class Booking extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    TextView txt;
+    TextView txt, price;
     GridView gridView;
-    BusinessUser user;
     String name, newtxt;
     Date currentDate;
-    String bu, s, cd;
+    String bu, s, cday;
     CalendarView calendar;
     ArrayList<String> typesList = new ArrayList<String>();
     ArrayList<String> options = new ArrayList<String>();
@@ -65,7 +64,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     String[] days = { "sun", "mon", "tue", "wed", "thu", "fri", "sat" };
     FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference myApp, myRef;
+    DatabaseReference myApp, myRef, myUser;
     ArrayAdapter adapter;
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -77,6 +76,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        myUser = database.getReference("User");
         myApp = database.getReference("Appointments");
         myRef = database.getReference("Appointment Type");
 
@@ -96,6 +96,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         setPopupList();
         setListeners();
 
+        price = (TextView) findViewById(R.id.price);
         txt = (TextView) findViewById(R.id.textView13);
         name = bu;
         newtxt = txt.getText().toString().trim();
@@ -108,20 +109,20 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                cd = df.format(currentDate);
+                cday = df.format(currentDate);
 
                 findViewById(R.id.btn).setVisibility(View.INVISIBLE);
                 options.clear();
                 booking.clear();
                 adapter.notifyDataSetChanged();
 
-                if(Integer.parseInt(cd.substring(6,10)) > year)
+                if(Integer.parseInt(cday.substring(6,10)) > year)
                     Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
 
-                else if(Integer.parseInt(cd.substring(3,5)) > (month+1) && Integer.parseInt(cd.substring(6,10)) == year)
+                else if(Integer.parseInt(cday.substring(3,5)) > (month+1) && Integer.parseInt(cday.substring(6,10)) == year)
                     Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
 
-                else if((Integer.parseInt(cd.substring(0,2)) > dayOfMonth && Integer.parseInt(cd.substring(3,5)) == (month+1) && Integer.parseInt(cd.substring(6,10)) == year))
+                else if((Integer.parseInt(cday.substring(0,2)) > dayOfMonth && Integer.parseInt(cday.substring(3,5)) == (month+1) && Integer.parseInt(cday.substring(6,10)) == year))
                     Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
 
                 else {
@@ -163,6 +164,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             options.clear();
                             adapter.notifyDataSetChanged();
+                            findViewById(R.id.btn).setVisibility(View.INVISIBLE);
 
                             types.setText(parent.getItemAtPosition(position).toString());//we set the selected element in the EditText
                             Query q = myRef.child(bu).child(parent.getItemAtPosition(position).toString());
@@ -175,6 +177,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                                     snapshot.child("days").child(days[i]).getValue(Boolean.class));
                                         }
                                         AppointmentType t = snapshot.getValue(AppointmentType.class);
+                                        price.setText("Price : " + t.getPrice());
                                         setSelectedType(t);
                                     }
                                 }
@@ -201,7 +204,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     public void CheckAppointment(String cd, String day){
 
         if(select != null){
-            if(daysMap.get(day) == false || currentDate.equals(cd)){
+            if(daysMap.get(day) == false || cday.equals(cd)){
                 options.clear();
                 Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
             }
@@ -213,32 +216,35 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         for(DataSnapshot i : snapshot.getChildren()){
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
-                                int year = Integer.parseInt(p.getDate().substring(6,10))
-                                        , month = Integer.parseInt(p.getDate().substring(3,5))
-                                        , day = Integer.parseInt(p.getDate().substring(0,2));
+                                if(p.getIsCustomer().equals("true")){
+                                    int year = Integer.parseInt(p.getDate().substring(6,10))
+                                            , month = Integer.parseInt(p.getDate().substring(3,5))
+                                            , day = Integer.parseInt(p.getDate().substring(0,2));
 
-                                String todayDate = df.format(Calendar.getInstance().getTime());
-                                int year1 = Integer.parseInt(todayDate.substring(6,10));
-                                int month1 = Integer.parseInt(todayDate.substring(3,5));
-                                int day1 = Integer.parseInt(todayDate.substring(0,2));
-                                if (year1 > year)
-                                    i.getRef().removeValue();
-                                if(year1 == year && month1 > month)
-                                    i.getRef().removeValue();
-                                if (year1 == year && month1 == month && day1 > day)
-                                    i.getRef().removeValue();
+                                    String todayDate = df.format(Calendar.getInstance().getTime());
+                                    int year1 = Integer.parseInt(todayDate.substring(6,10));
+                                    int month1 = Integer.parseInt(todayDate.substring(3,5));
+                                    int day1 = Integer.parseInt(todayDate.substring(0,2));
+                                    if (year1 > year)
+                                        i.getRef().removeValue();
+                                    if(year1 == year && month1 > month)
+                                        i.getRef().removeValue();
+                                    if (year1 == year && month1 == month && day1 > day)
+                                        i.getRef().removeValue();
 
 
-                                if(p.getDate().equals(cd)){
-                                    double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
-                                            Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
-                                    double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
-                                            Double.parseDouble((String) p.getEndTime().subSequence(3,5)) / 60.0;
+                                    if(p.getDate().equals(cd)){
+                                        double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
+                                                Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
+                                        double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
+                                                Double.parseDouble((String) p.getEndTime().subSequence(3,5)) / 60.0;
 
-                                    booking.put(h,h1);
+                                        booking.put(h,h1);
+                                    }
                                 }
                             }
                         }
+
                         double d = select.getDuration_hours() + Double.valueOf(select.getDuration_minutes())/60;
                         double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                         double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
@@ -272,6 +278,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                                 adapter.notifyDataSetChanged();
                             }
                         }
+                        booking.clear();
                     }
 
                     @Override
@@ -292,10 +299,23 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         s = parent.getItemAtPosition(position).toString();
         Time t1 = new Time(Integer.parseInt(s.substring(5,7)), Integer.parseInt(s.substring(8,10)), 0);
         Time t2 = new Time(Integer.parseInt(s.substring(14,16)), Integer.parseInt(s.substring(17,19)), 0);
-        System.out.println(selectDate);
-        app = new Appointment(t1.toString().substring(0,5),t2.toString().substring(0,5)
-                ,CustomerHomePage.getUser().getName(),
-                bu, select.getName(), df.format(selectDate));
+
+        myUser.orderByChild("name").equalTo(bu).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    String phone = ds.getValue(User.class).getPhone();
+                    app = new Appointment(t1.toString().substring(0,5),t2.toString().substring(0,5)
+                            ,CustomerHomePage.getUser().getName(), bu,
+                            select.getName(), df.format(selectDate), CustomerHomePage.getUser().getPhone(), phone, "true");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -304,14 +324,10 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
             options.remove(s);
             adapter.notifyDataSetChanged();
-            //String str = app.getStartTime() + " - " + app.getEndTime() + ", " + app.getDate();
-            String str = app.getDate() + " " + app.getStartTime() + "-" + app.getEndTime()
+            String str_ = app.getDate() + " " + app.getStartTime() + "-" + app.getEndTime()
                     + " " + app.getBusinessN() + " " + app.getType()
                     + " " + app.getCustomerN();
-            myApp.child(str).setValue(app);
-
-
-
+            myApp.child(str_).setValue(app);
         }
     }
 

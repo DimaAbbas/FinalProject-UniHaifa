@@ -32,11 +32,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef;
-    List list = new ArrayList<>();
-    Map<String,String> item;
     ListView business;
-    //SimpleAdapter adapter;
-    ArrayList<BusinessUser> users = new ArrayList<>();
     static BusinessUser bu;
 
     SearchResultListAdapter adapter;

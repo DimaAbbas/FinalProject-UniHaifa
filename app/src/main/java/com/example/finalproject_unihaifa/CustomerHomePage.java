@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -31,26 +32,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerHomePage extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
-    ListView apps;
+public class CustomerHomePage extends AppCompatActivity implements View.OnClickListener {
     TextView username;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef, myApp;
-    ArrayList<Appointment> app = new ArrayList<Appointment>();;
-    Map<String, String > item;
     static User user = new User();
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
-    ArrayList<String> firstLine = new ArrayList<>();
-    ArrayList<String> secondLine = new ArrayList<>();
     ArrayList<String> fullName = new ArrayList<>();
-    CustomerBookedAppsListAdapter adapter;
+    ArrayList<String> appointments = new ArrayList<>();
+    ArrayList<String> business = new ArrayList<>();
+    ArrayList<String> phones = new ArrayList<>();
+    ArrayList<String> hours = new ArrayList<>();
+    ArrayList<String> minutes = new ArrayList<>();
 
+    DailyBookedAppsAdapter adapter;
+    ListView dailyList;
+
+    CalendarView calendarView;
+    String currentDate, selectedDate;
+    int currentYear, currentMonth, currentDay;
+    int selectedYear, selectedMonth, selectedDay;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,87 +70,54 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
         myRef = database.getReference("User");
         myApp = database.getReference("Appointments");
 
-        apps = (ListView) findViewById(R.id.Appointments);
-        adapter = new CustomerBookedAppsListAdapter(this, firstLine, secondLine, fullName);
-        apps.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
         username = (TextView) findViewById(R.id.username1);
 
-        FirebaseUser current = mAuth.getCurrentUser();
+        dailyList = (ListView) findViewById(R.id.Appointments);
+        adapter = new DailyBookedAppsAdapter(this, fullName, appointments, business, phones, hours, minutes);
+        dailyList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
-        if(current != null){
-            Query query = myRef.child(current.getUid());
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    User user_ = snapshot.getValue(User.class);
-                    setUser(user_);
-                    username.setText(user_.getName() + " ,");
-                    Query query1 = myApp.orderByChild("customerN").equalTo(user_.getName());
-                    query1.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            //list.clear();
-                            firstLine.clear();
-                            secondLine.clear();
-                            fullName.clear();
-                            for(DataSnapshot i : snapshot.getChildren()){
-                                if(i.exists()){
-                                    Appointment p = i.getValue(Appointment.class);
-                                    int year = Integer.parseInt(p.getDate().substring(6,10))
-                                            , month = Integer.parseInt(p.getDate().substring(3,5))
-                                            , day = Integer.parseInt(p.getDate().substring(0,2));
-                                    String cd = df.format(Calendar.getInstance().getTime());
+        currentDate = df.format(Calendar.getInstance().getTime());
+        currentYear = Integer.parseInt(currentDate.substring(6,10));
+        currentMonth = Integer.parseInt(currentDate.substring(3,5));
+        currentDay = Integer.parseInt(currentDate.substring(0,2));
 
-                                    if(Integer.parseInt(cd.substring(6,10)) > year)
-                                        i.getRef().removeValue();
+        myRef.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //getting the user's name to show on top of screen
+                User user_ = snapshot.getValue(User.class);
+                setUser(user_);
+                username.setText(user_.getName() + " ,");
 
-                                    else if(Integer.parseInt(cd.substring(3,5)) > month && Integer.parseInt(cd.substring(6,10)) == year)
-                                        i.getRef().removeValue();
+                filterAppointments(user_.getName());
+                selectedYear = currentYear;
+                selectedMonth = currentMonth;
+                selectedDay = currentDay;
+                getBookedAppointments(user_.getName());
+            }
 
-                                    else if((Integer.parseInt(cd.substring(0,2)) > day && Integer.parseInt(cd.substring(3,5)) == month && Integer.parseInt(cd.substring(6,10)) == year))
-                                        i.getRef().removeValue();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                                    /*item = new HashMap<String,String>();
-                                    item.put("line1", p.getType() + " appointment at " + p.getBusinessN());
-                                    item.put("line2", "Time : " + p.getStartTime().subSequence(0,5)
-                                            + "-" + p.getEndTime().subSequence(0,5) + ", Date : " + p.getDate());*/
-                                    //list.add(item);
-                                    firstLine.add(p.getType() + " appointment at " + p.getBusinessN());
-                                    secondLine.add("Time : " + p.getStartTime().subSequence(0,5)
-                                            + "-" + p.getEndTime().subSequence(0,5) + ", Date : " + p.getDate());
-                                    fullName.add(i.getKey());
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
+            }
+        });
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+        calendarView = (CalendarView) findViewById(R.id.customer_home);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                selectedDate = df.format(new Date(year-1900, month, dayOfMonth));
+                selectedYear = Integer.parseInt(selectedDate.substring(6,10));
+                selectedMonth = Integer.parseInt(selectedDate.substring(3,5));
+                selectedDay = Integer.parseInt(selectedDate.substring(0,2));
 
-                        }
-                    });
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        apps.setOnItemClickListener(this);
+                getBookedAppointments(getUser().getName());
+            }
+        });
 
         findViewById(R.id.B_account).setOnClickListener(this);
         findViewById(R.id.B_new_appointment).setOnClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO
-        System.out.println("Yes");
-        if(view.getId() == R.id.delete_app){
-            System.out.println("Yes delete button");
-        }
     }
 
     @Override
@@ -203,6 +178,72 @@ public class CustomerHomePage extends AppCompatActivity implements AdapterView.O
             }
         });
 
+    }
+
+    private void getBookedAppointments(String userName) {
+        myApp.orderByChild("customerN").equalTo(userName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    fullName.clear(); appointments.clear(); business.clear();
+                    phones.clear(); hours.clear(); minutes.clear();
+                    adapter.notifyDataSetChanged();
+                    for (DataSnapshot ds: snapshot.getChildren()) {
+                        Appointment app = ds.getValue(Appointment.class);
+                        if(app.getIsCustomer().equals("true")){
+                            int year = Integer.parseInt(app.getDate().substring(6,10));
+                            int month = Integer.parseInt(app.getDate().substring(3,5));
+                            int day = Integer.parseInt(app.getDate().substring(0,2));
+
+                            if (year == selectedYear && month == selectedMonth && day == selectedDay){
+                                fullName.add(ds.getKey());
+                                appointments.add(app.getType());
+                                business.add(app.getBusinessN());
+                                phones.add(app.getBusinessPhone());
+                                hours.add(app.getStartTime().substring(0,2));
+                                minutes.add(app.getStartTime().substring(3,5));
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void filterAppointments(String userName) {
+        myApp.child(userName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot ds:snapshot.getChildren()){
+                        Appointment appointment = ds.getValue(Appointment.class);
+                        if(appointment.getIsCustomer().equals("true")){
+                            int year = Integer.parseInt(appointment.getDate().substring(6,10));
+                            int month = Integer.parseInt(appointment.getDate().substring(3,5));
+                            int day = Integer.parseInt(appointment.getDate().substring(0,2));
+
+                            if (currentYear > year)
+                                ds.getRef().removeValue();
+                            else if (currentYear == year && currentMonth > month)
+                                ds.getRef().removeValue();
+                            else if (currentYear == year && currentMonth == month && currentDay > day)
+                                ds.getRef().removeValue();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void setUser(User user){

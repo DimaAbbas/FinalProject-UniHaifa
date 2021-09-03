@@ -92,7 +92,9 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                         new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String bu = snapshot.getValue(User.class).getName();
+                                                User bu_ = snapshot.getValue(User.class);
+                                                String bu = bu_.getName();
+                                                String bPhone = bu_.getPhone();
 
                                                 if (mySwitch.isChecked()) {
                                                     String customerUsername = usernameTxt.getText().toString().trim();
@@ -120,7 +122,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
                                                                     String phone = ds.getValue(User.class).getPhone();
                                                                     Appointment appointment = new Appointment(t1.toString().substring(0,5),
                                                                             t2.toString().substring(0,5), customerUsername, bu,
-                                                                            BusinessBooking.getSelectedType(), BusinessBooking.getDate(), phone);
+                                                                            BusinessBooking.getSelectedType(), BusinessBooking.getDate(), phone, bPhone, "true");
                                                                     String str = appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()
                                                                             + " " + appointment.getBusinessN() + " " + appointment.getType()
                                                                             + " " + appointment.getCustomerN();
@@ -163,7 +165,7 @@ public class BusinessBookingListAdapter extends ArrayAdapter {
 
                                                     Appointment appointment = new Appointment(t1.toString().substring(0,5),
                                                             t2.toString().substring(0,5), customerName, bu,
-                                                            BusinessBooking.getSelectedType(), BusinessBooking.getDate(), customerPhone);
+                                                            BusinessBooking.getSelectedType(), BusinessBooking.getDate(), customerPhone, bPhone, "false");
 
                                                     //String str = appointment.getStartTime() + " - " + appointment.getEndTime() + ", " + appointment.getDate();
                                                     String str = appointment.getDate() + " " + appointment.getStartTime() + "-" + appointment.getEndTime()

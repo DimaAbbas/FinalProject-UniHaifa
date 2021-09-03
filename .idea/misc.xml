@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_booking.xml" value="0.17572463768115942" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_home.xml" value="0.17572463768115942" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_customer_home.xml" value="0.17572463768115942" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />
