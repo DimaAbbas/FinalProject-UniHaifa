@@ -1,11 +1,9 @@
 package com.example.finalproject_unihaifa;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +22,9 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
 
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    TextView username_txt, accountType_txt, email_txt, phone_txt;
-    String email, phone;
-    EditText edit_phone, edit_email;
+    TextView username_txt, accountType_txt, email_txt, phone_txt, description_txt, description_view;
+    String description, phone, userType;
+    EditText edit_phone, edit_description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -40,8 +38,11 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
         accountType_txt = (TextView) findViewById(R.id.account_type_info);
         email_txt = (TextView) findViewById(R.id.email_info);
         phone_txt = (TextView) findViewById(R.id.phone_info);
-        edit_email = (EditText) findViewById(R.id.edit_email_info);
+        description_txt = (TextView) findViewById(R.id.description_info);
+
         edit_phone = (EditText) findViewById(R.id.edit_phone_info);
+        edit_description = (EditText) findViewById(R.id.edit_description_info);
+        description_view = (TextView) findViewById(R.id.description);
 
         findViewById(R.id.editAccountSwitch).setOnClickListener(this);
         findViewById(R.id.reset_password).setOnClickListener(this);
@@ -56,8 +57,15 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
                 email_txt.setText(snapshot.getValue(User.class).getEmail());
                 phone_txt.setText(snapshot.getValue(User.class).getPhone());
 
-                edit_email.setText(email_txt.getText().toString().trim());
                 edit_phone.setText(phone_txt.getText().toString().trim());
+
+                if (snapshot.getValue(BusinessUser.class).getType().equals("Business Owner")) {
+                    description_txt.setText(snapshot.getValue(BusinessUser.class).getDescription());
+                    edit_description.setText(description_txt.getText().toString().trim());
+                    description_view.setVisibility(View.VISIBLE);
+                    description_txt.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
@@ -73,16 +81,40 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.editAccountSwitch:
                 if (((Switch)findViewById(R.id.editAccountSwitch)).isChecked()) {
-                    email_txt.setVisibility(View.INVISIBLE);
                     phone_txt.setVisibility(View.INVISIBLE);
-                    edit_email.setVisibility(View.VISIBLE);
                     edit_phone.setVisibility(View.VISIBLE);
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue(BusinessUser.class).getType().equals("Business Owner")){
+                                description_txt.setVisibility(View.INVISIBLE);
+                                edit_description.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     ((Switch)findViewById(R.id.editAccountSwitch)).setText("save");
                 } else {
-                    email_txt.setVisibility(View.VISIBLE);
                     phone_txt.setVisibility(View.VISIBLE);
-                    edit_email.setVisibility(View.INVISIBLE);
                     edit_phone.setVisibility(View.INVISIBLE);
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue(BusinessUser.class).getType().equals("Business Owner")){
+                                description_txt.setVisibility(View.VISIBLE);
+                                edit_description.setVisibility(View.INVISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     editAccountInfo();
                     ((Switch)findViewById(R.id.editAccountSwitch)).setText("edit");
                 }
@@ -94,8 +126,8 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
     }
 
     private void editAccountInfo() {
-        email = edit_email.getText().toString().trim();
         phone = edit_phone.getText().toString().trim();
+        description = edit_description.getText().toString().trim();
 
         if (phone.isEmpty()) {
             edit_phone.setError("Phone is required!!");
@@ -107,22 +139,21 @@ public class AccountInfo extends AppCompatActivity implements View.OnClickListen
             edit_phone.requestFocus();
             return;
         }
-        if (email.isEmpty()) {
-            edit_email.setError("Email is required!!");
-            edit_email.requestFocus();
-            return;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            edit_email.setError("Please provide valid email");
-            edit_email.requestFocus();
-            return;
-        }
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myRef.child("email").setValue(email);
                 myRef.child("phone").setValue(phone);
+
+                if (snapshot.getValue(BusinessUser.class).getType().equals("Business Owner")){
+                    if (description.isEmpty()) {
+                        edit_description.setError("you must enter a description to your business");
+                        edit_description.requestFocus();
+                        return;
+                    }
+                    myRef.child("description").setValue(description);
+                }
+
             }
 
             @Override
