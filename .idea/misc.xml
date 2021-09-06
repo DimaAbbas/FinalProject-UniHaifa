@@ -6,6 +6,23 @@
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_booking.xml" value="0.17572463768115942" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_business_home.xml" value="0.17572463768115942" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_customer_home.xml" value="0.17572463768115942" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/activity_search_result.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/dialog_add_feature_customer.xml" value="0.10597826086956522" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/dialog_business_booking.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/dialog_logout.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/dialog_remove_featured_customer.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/featured_customers_list.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_business_booking.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_daily_booked_apps.xml" value="0.14764492753623187" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_item.xml" value="0.10597826086956522" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_request.xml" value="0.14764492753623187" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/list_search_result.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/multi_line.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/layout/multi_line_1.xml" value="0.15806159420289856" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/business_submenu.xml" value="0.1796875" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/customer_menu.xml" value="0.1796875" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/customer_submenu.xml" value="0.1796875" />
+        <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProject-UniHaifa/app/src/main/res/menu/user_menu.xml" value="0.1796875" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dima/AndroidStudioProjects/FinalProjectUniHaifa/app/src/main/res/layout/activity_signup.xml" value="0.1" />

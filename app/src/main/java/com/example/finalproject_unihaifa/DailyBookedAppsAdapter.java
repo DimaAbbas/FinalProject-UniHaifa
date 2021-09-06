@@ -74,6 +74,8 @@ public class DailyBookedAppsAdapter extends ArrayAdapter {
                     public void onClick(View v) {
                         DatabaseReference appRef = FirebaseDatabase.getInstance().getReference("Appointments");
                         appRef.child(fullAppName.get(position)).removeValue();
+                        appointments.clear(); customers.clear();
+                        phones.clear(); hours.clear(); minutes.clear();
                         notifyDataSetChanged();
                         dialog.dismiss();
                     }
