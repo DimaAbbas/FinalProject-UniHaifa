@@ -192,6 +192,8 @@ public class BusinessBooking extends AppCompatActivity {
                                     query.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            options.clear();
+                                            booking.clear();
                                             for(DataSnapshot i : snapshot.getChildren()){
                                                 if(i.exists()){
                                                     Appointment p = i.getValue(Appointment.class);

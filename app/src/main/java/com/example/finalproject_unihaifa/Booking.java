@@ -228,6 +228,8 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        options.clear();
+                        booking.clear();
                         for(DataSnapshot i : snapshot.getChildren()){
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
@@ -270,6 +272,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                             Time t2 = new Time(h1,m1,0);
                             String str = "from " + t1.toString().subSequence(0,5) +
                                     " to " + t2.toString().subSequence(0,5);
+
                             if(!booking.isEmpty()){
                                 for(double k : booking.keySet()){
                                     v = booking.get(k);
