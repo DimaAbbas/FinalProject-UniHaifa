@@ -90,6 +90,7 @@ public class AppointmentTypeListAdapter extends ArrayAdapter {
                                 DatabaseReference myref = mydatabase.getReference("Appointment Type");
                                 myref = myref.child(username).child(name.get(position));
                                 myref.removeValue();
+                                updateMinDuration();
                                 dialog.dismiss();
                             }
 
@@ -115,5 +116,45 @@ public class AppointmentTypeListAdapter extends ArrayAdapter {
 
         return rowView;
 
+    }
+
+    private void updateMinDuration() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("User").child(mAuth.getCurrentUser().getUid());
+        DatabaseReference appTypeRef = database.getReference("Appointment Type");
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String username = snapshot.getValue(User.class).getName();
+
+                appTypeRef.child(username).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            double minDuration = Double.MAX_VALUE;
+                            for (DataSnapshot ds:snapshot.getChildren()){
+                                AppointmentType type = ds.getValue(AppointmentType.class);
+                                double duration = type.getDuration_hours() + Double.valueOf(type.getDuration_minutes())/60;
+                                if (duration < minDuration)
+                                    minDuration = duration;
+                            }
+                            userRef.child("minDuration").setValue(minDuration);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

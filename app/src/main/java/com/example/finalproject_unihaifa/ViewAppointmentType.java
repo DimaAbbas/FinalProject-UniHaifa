@@ -42,10 +42,11 @@ public class ViewAppointmentType extends AppCompatActivity implements View.OnCli
     String startH, startM, endH, endM, durationH, durationM;
     Spinner startHS, startMS, endHS, endMS, durationHS, durationMS;
     ChipGroup chipGroup;
+    double minDuration;
 
     FirebaseAuth mAuth;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef, userRef;
 
     ArrayAdapter hour_adapter, minute_adapter;
 
@@ -63,11 +64,9 @@ public class ViewAppointmentType extends AppCompatActivity implements View.OnCli
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Appointment Type");
+        userRef = database.getReference("User").child(mAuth.getCurrentUser().getUid());
 
         username = LogIn.getUser().getName();
-
-        System.out.println(passedName);
-        System.out.println(username);
 
         editName = (EditText) findViewById(R.id.editAppointmentName);
         editPrice = (EditText) findViewById(R.id.editAppointmentPrice);
@@ -268,6 +267,27 @@ public class ViewAppointmentType extends AppCompatActivity implements View.OnCli
                     passedName = name;
                     myRef.child(name).setValue(newApp);
                     myRef.child(name).child("days").setValue(days);
+
+                    double duration = newApp.getDuration_hours() + Double.valueOf(newApp.getDuration_minutes()) / 60;
+                    userRef.child("minDuration").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                if (snapshot.getValue(double.class) > duration)
+                                    userRef.child("minDuration").setValue(duration);
+                            } else userRef.child("minDuration").setValue(duration);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    System.out.println("minDuration: " + minDuration);
+                    System.out.println(("duration: " + duration));
+                    if (duration < minDuration) {
+                        //userRef.child("minDuration").setValue(duration);
+                    }
                 }
             }
 

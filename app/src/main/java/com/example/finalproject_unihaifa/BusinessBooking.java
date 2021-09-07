@@ -169,6 +169,7 @@ public class BusinessBooking extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String current = snapshot.getValue(User.class).getName();
+                double time_space = snapshot.child("minDuration").getValue(double.class);
                 String selectedAppType = spinner.getSelectedItem().toString();
                 if (selectedAppType != "-select type-") {
                     setSelectedType(selectedAppType);
@@ -208,7 +209,7 @@ public class BusinessBooking extends AppCompatActivity {
                                             double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                                             double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
 
-                                            for(double i = s; i <= e; i++){
+                                            for(double i = s; i <= e; i = i + time_space){
                                                 double j = i, v;
                                                 int h = (int) j; int m = (int) ((j%1) * 60.0);
                                                 int h1 = (int) (j+d); int m1 = (int) (((j+d)%1)*60.0);
