@@ -34,6 +34,7 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
     Spinner hoursStartS, minutesStartS, hoursEndS, minutesEndS, hoursDurationS, minutesDurationS;
     public Map<String, Boolean> days = new HashMap<>();
     ChipGroup chipgroup;
+    double minDuration;
 
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
@@ -178,6 +179,22 @@ public class NewAppointmentType extends AppCompatActivity implements View.OnClic
                             Integer.valueOf(hoursEnd), Integer.valueOf(minutesEnd));
                     myAppointment.child(username).child(name).setValue(newApp);
                     myAppointment.child(username).child(name).child("days").setValue(days);
+
+                    double duration = newApp.getDuration_hours() + Double.valueOf(newApp.getDuration_minutes()) /60;
+                    myRef.child("minDuration").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                if (snapshot.getValue(double.class) > duration)
+                                    myRef.child("minDuration").setValue(duration);
+                            } else myRef.child("minDuration").setValue(duration);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     finish();
                     //startActivity(new Intent(getApplicationContext(), AppointmentsSettings.class));
                 }

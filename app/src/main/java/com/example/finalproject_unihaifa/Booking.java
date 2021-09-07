@@ -67,6 +67,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     DatabaseReference myApp, myRef, myUser;
     ArrayAdapter adapter;
     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+    double time_space;
 
 
     @Override
@@ -204,6 +205,20 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
     public void CheckAppointment(String cd, String day){
 
         if(select != null){
+            myUser.orderByChild("name").equalTo(bu).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds: snapshot.getChildren()){
+                        time_space = ds.child("minDuration").getValue(double.class);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
             if(daysMap.get(day) == false || cday.equals(cd)){
                 options.clear();
                 Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();
@@ -216,31 +231,29 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         for(DataSnapshot i : snapshot.getChildren()){
                             if(i.exists()){
                                 Appointment p = i.getValue(Appointment.class);
-                                if(p.getIsCustomer().equals("true")){
-                                    int year = Integer.parseInt(p.getDate().substring(6,10))
-                                            , month = Integer.parseInt(p.getDate().substring(3,5))
-                                            , day = Integer.parseInt(p.getDate().substring(0,2));
+                                int year = Integer.parseInt(p.getDate().substring(6,10))
+                                        , month = Integer.parseInt(p.getDate().substring(3,5))
+                                        , day = Integer.parseInt(p.getDate().substring(0,2));
 
-                                    String todayDate = df.format(Calendar.getInstance().getTime());
-                                    int year1 = Integer.parseInt(todayDate.substring(6,10));
-                                    int month1 = Integer.parseInt(todayDate.substring(3,5));
-                                    int day1 = Integer.parseInt(todayDate.substring(0,2));
-                                    if (year1 > year)
-                                        i.getRef().removeValue();
-                                    if(year1 == year && month1 > month)
-                                        i.getRef().removeValue();
-                                    if (year1 == year && month1 == month && day1 > day)
-                                        i.getRef().removeValue();
+                                String todayDate = df.format(Calendar.getInstance().getTime());
+                                int year1 = Integer.parseInt(todayDate.substring(6,10));
+                                int month1 = Integer.parseInt(todayDate.substring(3,5));
+                                int day1 = Integer.parseInt(todayDate.substring(0,2));
+                                if (year1 > year)
+                                    i.getRef().removeValue();
+                                if(year1 == year && month1 > month)
+                                    i.getRef().removeValue();
+                                if (year1 == year && month1 == month && day1 > day)
+                                    i.getRef().removeValue();
 
 
-                                    if(p.getDate().equals(cd)){
-                                        double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
-                                                Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
-                                        double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
-                                                Double.parseDouble((String) p.getEndTime().subSequence(3,5)) / 60.0;
+                                if(p.getDate().equals(cd)){
+                                    double h = Double.parseDouble((String) p.getStartTime().subSequence(0,2)) +
+                                            Double.parseDouble((String) p.getStartTime().subSequence(3,5)) / 60.0;
+                                    double h1 = Double.parseDouble((String) p.getEndTime().subSequence(0,2)) +
+                                            Double.parseDouble((String) p.getEndTime().subSequence(3,5)) / 60.0;
 
-                                        booking.put(h,h1);
-                                    }
+                                    booking.put(h,h1);
                                 }
                             }
                         }
@@ -249,7 +262,7 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
                         double s = select.getStartTime_hours() + Double.valueOf(select.getStartTime_minutes())/60;
                         double e = select.getEndTime_hours() + Double.valueOf(select.getEndTime_minutes())/60;
 
-                        for(double i = s; i <= e; i++){
+                        for(double i = s; i <= e; i=i+time_space){
                             double j = i, v;
                             int h = (int) j; int m = (int) ((j%1) * 60.0);
                             int h1 = (int) (j+d); int m1 = (int) (((j+d)%1)*60.0);
@@ -323,11 +336,11 @@ public class Booking extends AppCompatActivity implements View.OnClickListener, 
         if(v.getId() == R.id.btn){
             findViewById(R.id.btn).setVisibility(View.INVISIBLE);
             options.remove(s);
-            adapter.notifyDataSetChanged();
             String str_ = app.getDate() + " " + app.getStartTime() + "-" + app.getEndTime()
                     + " " + app.getBusinessN() + " " + app.getType()
                     + " " + app.getCustomerN();
             myApp.child(str_).setValue(app);
+            adapter.notifyDataSetChanged();
         }
     }
 

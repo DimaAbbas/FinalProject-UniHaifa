@@ -5,8 +5,8 @@ import java.util.List;
 public class BusinessUser extends User {
 
     private String description;
-    int appointmentsTypesCount;
-    private List<AppointmentType> appointmentTypes;
+    //int appointmentsTypesCount;
+    //private List<AppointmentType> appointmentTypes;
 
     public BusinessUser(){
 
@@ -16,23 +16,23 @@ public class BusinessUser extends User {
                          String description) {
         super(name, phone, email, password, type);
         this.description = description;
-        appointmentsTypesCount = 0;
-        appointmentTypes = null;
+        //appointmentsTypesCount = 0;
+        //appointmentTypes = null;
     }
 
     public BusinessUser (BusinessUser user) {
         super(user);
         this.description = user.description;
-        this.appointmentsTypesCount = user.appointmentsTypesCount;
-        this.appointmentTypes = user.appointmentTypes;
+        //this.appointmentsTypesCount = user.appointmentsTypesCount;
+        //this.appointmentTypes = user.appointmentTypes;
     }
 
-    public void addAppointmentType(AppointmentType newAppointmentType) {
+    /*public void addAppointmentType(AppointmentType newAppointmentType) {
         appointmentTypes.add(newAppointmentType);
         appointmentsTypesCount += 1;
-    }
+    }*/
 
     public String getDescription() {return this.description;}
-    public int getAppointmentsTypesCount() {return this.appointmentsTypesCount;}
+    //public int getAppointmentsTypesCount() {return this.appointmentsTypesCount;}
 
 }
