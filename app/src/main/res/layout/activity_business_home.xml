@@ -32,19 +32,32 @@
     <CalendarView
         android:id="@+id/business_home_calendar"
         android:layout_width="411dp"
-        android:layout_height="329dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="300dp"
+        android:theme="@style/editSwitchTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:theme="@style/editSwitchTheme"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <Button
+        android:id="@+id/sendSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="@color/buttons"
+        android:text="send reminder SMS"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/business_home_calendar" />
 
     <ListView
         android:id="@+id/daily_booked_apps_list"
         android:layout_width="380dp"
-        android:layout_height="300dp"
+        android:layout_height="290dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/business_home_calendar" />
+        app:layout_constraintTop_toBottomOf="@+id/sendSMS">
+
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

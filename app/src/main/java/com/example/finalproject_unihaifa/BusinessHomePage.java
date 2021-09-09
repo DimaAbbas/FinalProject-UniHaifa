@@ -1,8 +1,12 @@
 package com.example.finalproject_unihaifa;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +57,8 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     int currentYear, currentMonth, currentDay;
     int selectedYear, selectedMonth, selectedDay;
 
+    Button smsButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +102,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
         });
 
         calendarView = (CalendarView) findViewById(R.id.business_home_calendar);
+        smsButton = (Button) findViewById(R.id.sendSMS);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -109,6 +116,18 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         userName = snapshot.getValue(User.class).getName();
                         getBookedAppointments(userName);
+
+                        Calendar tomorrow = Calendar.getInstance();
+                        tomorrow.add(Calendar.DAY_OF_YEAR, + 1);
+                        Calendar today = Calendar.getInstance();
+                        today.setTime(new Date(year-1900, month, dayOfMonth));
+                        if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+                                && adapter.getCount() != 0) {
+                            smsButton.setVisibility(View.VISIBLE);
+                        } else {
+                            smsButton.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
@@ -121,6 +140,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
         findViewById(R.id.B_account).setOnClickListener(this);
         findViewById(R.id.B_new_appointment).setOnClickListener(this);
+        findViewById(R.id.sendSMS).setOnClickListener(this);
 
     }
 
@@ -158,6 +178,15 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
                 }
             });
+        } else if (view.getId() == R.id.sendSMS) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
+                    sendSMSReminder();
+                }
+                else {
+                    requestPermissions(new String[] {Manifest.permission.SEND_SMS}, 1);
+                }
+            }
         }
     }
 
@@ -256,38 +285,6 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
             }
         });
-        /*appRef.child(userName).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    appointments.clear(); customers.clear(); phones.clear();
-                    hours.clear(); minutes.clear();
-                    adapter.notifyDataSetChanged();
-                    for (DataSnapshot ds: snapshot.getChildren()) {
-                        Appointment app = ds.getValue(Appointment.class);
-                        int year = Integer.parseInt(app.getDate().substring(6,10));
-                        int month = Integer.parseInt(app.getDate().substring(3,5));
-                        int day = Integer.parseInt(app.getDate().substring(0,2));
-
-                        if (year == currentYear && month == currentMonth && day == currentDay){
-                            fullName.add(ds.getKey());
-                            System.out.println(ds.getKey());
-                            appointments.add(app.getType());
-                            customers.add(app.getCustomerN());
-                            phones.add("0537756048");
-                            hours.add(app.getStartTime().substring(0,2));
-                            minutes.add(app.getStartTime().substring(3,5));
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     private void filterAppointments(String userName) {
@@ -316,5 +313,26 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
 
             }
         });
+    }
+
+    private void sendSMSReminder() {
+
+        for (int i = 0; i<fullName.size(); i++) {
+            String sms = "Hello " + customers.get(i) + ", "
+                    + "We want to remind you of your " + appointments.get(i) + " appointment tomorrow at "
+                    + hours.get(i) + ":" + minutes.get(i) + ". If you can't come please contact us as soon as possible.";
+            String phoneNo = phones.get(i);
+            System.out.println(sms);
+            System.out.println(phoneNo);
+
+            try {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+                Toast.makeText(getApplicationContext(), "sms sent", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "failed to send sms", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
