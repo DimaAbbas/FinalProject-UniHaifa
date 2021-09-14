@@ -138,9 +138,8 @@ public class BusinessBooking extends AppCompatActivity {
                     c.set(year, month, dayOfMonth);
                     int day  = c.get(Calendar.DAY_OF_WEEK);
                     selectDate = new Date(year-1900,month,dayOfMonth);
-                    cday = df.format(selectDate);
-                    setDate(cday);
-                    CheckAppointment(cday, days[day-1]);
+                    setDate(df.format(selectDate));
+                    CheckAppointment(df.format(selectDate), days[day-1]);
                 }
             }
         });

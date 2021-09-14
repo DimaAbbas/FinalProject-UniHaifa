@@ -122,8 +122,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         Calendar today = Calendar.getInstance();
                         today.setTime(new Date(year-1900, month, dayOfMonth));
                         if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
-                                && adapter.getCount() != 0) {
+                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)){
                             smsButton.setVisibility(View.VISIBLE);
                         } else {
                             smsButton.setVisibility(View.INVISIBLE);
