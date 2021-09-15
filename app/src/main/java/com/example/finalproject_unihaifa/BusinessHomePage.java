@@ -58,6 +58,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     int selectedYear, selectedMonth, selectedDay;
 
     Button smsButton;
+    Calendar tomorrow, today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,10 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
         currentMonth = Integer.parseInt(currentDate.substring(3,5));
         currentDay = Integer.parseInt(currentDate.substring(0,2));
 
+        today = Calendar.getInstance();
+        tomorrow = Calendar.getInstance();
+        tomorrow.add(Calendar.DAY_OF_YEAR, + 1);
+
         userRef.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -92,6 +97,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                 selectedYear = currentYear;
                 selectedMonth = currentMonth;
                 selectedDay = currentDay;
+                today.setTime(Calendar.getInstance().getTime());
                 getBookedAppointments(userName);
             }
 
@@ -115,19 +121,8 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         userName = snapshot.getValue(User.class).getName();
-                        getBookedAppointments(userName);
-
-                        Calendar tomorrow = Calendar.getInstance();
-                        tomorrow.add(Calendar.DAY_OF_YEAR, + 1);
-                        Calendar today = Calendar.getInstance();
                         today.setTime(new Date(year-1900, month, dayOfMonth));
-                        if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
-                                && adapter.getCount() != 0) {
-                            smsButton.setVisibility(View.VISIBLE);
-                        } else {
-                            smsButton.setVisibility(View.INVISIBLE);
-                        }
+                        getBookedAppointments(userName);
                     }
 
                     @Override
@@ -277,6 +272,13 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             adapter.notifyDataSetChanged();
                         }
                     }
+                    if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                            && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+                            && fullName.size() != 0) {
+                        smsButton.setVisibility(View.VISIBLE);
+                    } else {
+                        smsButton.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -316,6 +318,10 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     }
 
     private void sendSMSReminder() {
+        if (fullName.size() == 0) {
+            Toast.makeText(getApplicationContext(), "you don't have booked appointments on this date", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         for (int i = 0; i<fullName.size(); i++) {
             String sms = "Hello " + customers.get(i) + ", "
@@ -328,7 +334,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
             try {
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage(phoneNo, null, sms, null, null);
-                Toast.makeText(getApplicationContext(), "sms sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "sms sent successfully", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "failed to send sms", Toast.LENGTH_SHORT).show();
