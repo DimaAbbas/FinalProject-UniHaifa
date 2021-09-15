@@ -270,7 +270,6 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             hours.add(app.getStartTime().substring(0,2));
                             minutes.add(app.getStartTime().substring(3,5));
                             adapter.notifyDataSetChanged();
-                            count = true;
                         }
                     }
                     if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
@@ -281,7 +280,6 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         smsButton.setVisibility(View.INVISIBLE);
                     }
                 }
-                else count = false;
             }
 
             @Override
@@ -330,8 +328,6 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                     + "We want to remind you of your " + appointments.get(i) + " appointment tomorrow at "
                     + hours.get(i) + ":" + minutes.get(i) + ". If you can't come please contact us as soon as possible.";
             String phoneNo = phones.get(i);
-            System.out.println(sms);
-            System.out.println(phoneNo);
 
             try {
                 SmsManager smsManager = SmsManager.getDefault();
