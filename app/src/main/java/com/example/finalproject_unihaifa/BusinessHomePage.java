@@ -58,6 +58,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     int selectedYear, selectedMonth, selectedDay;
 
     Button smsButton;
+    static Boolean count = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +123,11 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         Calendar today = Calendar.getInstance();
                         today.setTime(new Date(year-1900, month, dayOfMonth));
                         if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)){
+                                && tomorrow.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+                                && count){
                             smsButton.setVisibility(View.VISIBLE);
                         } else {
+                            count = false;
                             smsButton.setVisibility(View.INVISIBLE);
                         }
                     }
@@ -274,9 +277,11 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             hours.add(app.getStartTime().substring(0,2));
                             minutes.add(app.getStartTime().substring(3,5));
                             adapter.notifyDataSetChanged();
+                            count = true;
                         }
                     }
                 }
+                else count = false;
             }
 
             @Override
