@@ -58,7 +58,7 @@ public class BusinessBooking extends AppCompatActivity {
     HashMap<Double,Double> booking = new HashMap<Double,Double>();
     HashMap<String,Boolean> daysMap = new HashMap<String,Boolean>();
     AppointmentType select = null;
-    String bu;
+    String cday;
     ListView availableApps;
     BusinessBookingListAdapter adapter1;
     Date currentDate;
@@ -123,14 +123,14 @@ public class BusinessBooking extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String cd = df.format(currentDate);
+                cday = df.format(currentDate);
 
                 options.clear();
                 booking.clear();
                 adapter1.notifyDataSetChanged();
 
-                if(Integer.parseInt(cd.substring(6,10)) > year || Integer.parseInt(cd.substring(3,5)) > (month+1)
-                        ||(Integer.parseInt(cd.substring(0,2)) > dayOfMonth && Integer.parseInt(cd.substring(3,5)) == (month+1)))
+                if(Integer.parseInt(cday.substring(6,10)) > year || Integer.parseInt(cday.substring(3,5)) > (month+1)
+                        ||(Integer.parseInt(cday.substring(0,2)) > dayOfMonth && Integer.parseInt(cday.substring(3,5)) == (month+1)))
                     Toast.makeText(getApplicationContext(), "You have selected an old day, select another date", Toast.LENGTH_SHORT).show();
 
                 else {
@@ -138,9 +138,8 @@ public class BusinessBooking extends AppCompatActivity {
                     c.set(year, month, dayOfMonth);
                     int day  = c.get(Calendar.DAY_OF_WEEK);
                     selectDate = new Date(year-1900,month,dayOfMonth);
-                    cd = df.format(selectDate);
-                    setDate(cd);
-                    CheckAppointment(cd, days[day-1]);
+                    setDate(df.format(selectDate));
+                    CheckAppointment(df.format(selectDate), days[day-1]);
                 }
             }
         });
@@ -164,7 +163,6 @@ public class BusinessBooking extends AppCompatActivity {
     @SuppressLint("NewApi")
     public void CheckAppointment(String cd, String day){
 
-
         myref.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -182,7 +180,7 @@ public class BusinessBooking extends AppCompatActivity {
                                     setDaysMap(days[i],
                                             snapshot.child("days").child(days[i]).getValue(Boolean.class));
                                 }
-                                if(daysMap.get(day) == false){
+                                if(daysMap.get(day) == false || cday.equals(cd)){
                                     options.clear();
                                     adapter1.notifyDataSetChanged();
                                     Toast.makeText(getApplicationContext(), "No such booking received in this day", Toast.LENGTH_SHORT).show();

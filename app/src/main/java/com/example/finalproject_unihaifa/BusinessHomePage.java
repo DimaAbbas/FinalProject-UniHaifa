@@ -270,6 +270,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                             hours.add(app.getStartTime().substring(0,2));
                             minutes.add(app.getStartTime().substring(3,5));
                             adapter.notifyDataSetChanged();
+                            count = true;
                         }
                     }
                     if (tomorrow.get(Calendar.YEAR) == today.get(Calendar.YEAR)
@@ -280,6 +281,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
                         smsButton.setVisibility(View.INVISIBLE);
                     }
                 }
+                else count = false;
             }
 
             @Override
