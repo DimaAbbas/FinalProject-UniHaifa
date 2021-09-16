@@ -290,7 +290,7 @@ public class BusinessHomePage extends AppCompatActivity implements View.OnClickL
     }
 
     private void filterAppointments(String userName) {
-        appRef.child(userName).addValueEventListener(new ValueEventListener() {
+        appRef.orderByChild("businessN").equalTo(userName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
