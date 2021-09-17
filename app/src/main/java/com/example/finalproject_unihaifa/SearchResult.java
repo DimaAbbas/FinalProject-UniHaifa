@@ -93,22 +93,54 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
     public void setResultList(String text) {
 
-        /*if(search == null || search.length() == 0){
-            //Toast.makeText(getApplicationContext(), "Please enter a business name", Toast.LENGTH_SHORT).show();
-            businessUsernames.clear();
+        tf = false;
+        businessUsernames.clear();
+        if(search == null || search.length() == 0){
+            Toast.makeText(getApplicationContext(), "Please insert a name or description", Toast.LENGTH_SHORT).show();
+        }
+        else{
             myRef.orderByChild("type").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        for(DataSnapshot ds : snapshot.getChildren()){
+                    if (snapshot.exists()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             BusinessUser user = ds.getValue(BusinessUser.class);
-                            if(user.getType().equals("Business Owner")){
-                                businessUsernames.add(user.getName());
-                                adapter.notifyDataSetChanged();
+                            if (user.getType().equals("Business Owner")) {
+                                if (user.getName().toLowerCase().contains(search.toLowerCase()) ||
+                                        user.getDescription().toLowerCase().contains(search.toLowerCase())) {
+                                    businessUsernames.add(user.getName());
+                                    adapter.notifyDataSetChanged();
+                                    tf = true;
+                                }
+                                else{
+                                    myApp.child(user.getName()).orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.exists()){
+                                                for(DataSnapshot ds: snapshot.getChildren()){
+                                                    String appName = ds.getValue(AppointmentType.class).getName();
+                                                    if(appName.toLowerCase().contains(search.toLowerCase())){
+                                                        businessUsernames.add(user.getName());
+                                                        adapter.notifyDataSetChanged();
+                                                        tf = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
                             }
                         }
+                        if(!tf)
+                            Toast.makeText(getApplicationContext(), "Insert another name or description", Toast.LENGTH_SHORT).show();
                     }
                     else{
+                        businessUsernames.clear();
                         Toast.makeText(getApplicationContext(), "There are no business owners in the app yet.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -118,61 +150,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
-        }*/
-        tf = false;
-        businessUsernames.clear();
-        myRef.orderByChild("type").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        BusinessUser user = ds.getValue(BusinessUser.class);
-                        if (user.getType().equals("Business Owner")) {
-                            if (user.getName().toLowerCase().contains(search.toLowerCase()) ||
-                                    user.getDescription().toLowerCase().contains(search.toLowerCase()) ||
-                                    search == null || search.length() == 0) {
-                                businessUsernames.add(user.getName());
-                                adapter.notifyDataSetChanged();
-                                tf = true;
-                            }
-                            else{
-                                myApp.child(user.getName()).orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            for(DataSnapshot ds: snapshot.getChildren()){
-                                                AppointmentType app = ds.getValue(AppointmentType.class);
-                                                if(app.getName().toLowerCase().contains(search.toLowerCase())){
-                                                    businessUsernames.add(user.getName());
-                                                    adapter.notifyDataSetChanged();
-                                                    tf = true;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                        }
-                    }
-                    if(!tf)
-                        Toast.makeText(getApplicationContext(), "Insert another name or description", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    businessUsernames.clear();
-                    Toast.makeText(getApplicationContext(), "There are no business owners in the app yet.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        }
         //business.setOnItemClickListener(this);
     }
 
